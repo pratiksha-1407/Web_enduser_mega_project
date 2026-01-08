@@ -1,0 +1,17 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--scaffold-bg);
+    padding: 1rem;
+}
+
+.card {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}

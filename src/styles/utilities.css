@@ -1,0 +1,52 @@
+/* Add these to global.css or a new util file */
+.bg-primary-blue {
+    background-color: var(--primary-blue);
+}
+
+.bg-orange-500 {
+    background-color: var(--warning);
+}
+
+.bg-green-500 {
+    background-color: var(--success);
+}
+
+.text-white {
+    color: white;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+.mr-4 {
+    margin-right: 1rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+    margin-bottom: 2rem;
+}
+
+.text-2xl {
+    font-size: 1.5rem;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.text-gray-500 {
+    color: var(--text-secondary);
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}

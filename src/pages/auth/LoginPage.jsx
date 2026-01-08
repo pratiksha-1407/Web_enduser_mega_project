@@ -42,7 +42,7 @@ const LoginPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Welcome Back!</h1>
+                <h1>Login</h1>
                 <p>Login to access your dashboard</p>
             </div>
 

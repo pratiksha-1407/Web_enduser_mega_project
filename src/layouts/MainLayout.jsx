@@ -22,13 +22,13 @@ const MainLayout = ({ children }) => {
   const navigationItems = getNavigationItems(user?.role);
 
   return (
-    <div style={{ 
-      display: 'flex', 
+    <div style={{
+      display: 'flex',
       minHeight: '100vh',
       backgroundColor: theme.colors.background
     }}>
       {/* Fixed Sidebar */}
-      <div 
+      <div
         style={{
           backgroundColor: theme.colors.white,
           width: sidebarCollapsed ? '80px' : '280px',
@@ -44,16 +44,16 @@ const MainLayout = ({ children }) => {
         }}
       >
         {/* Logo Section */}
-        <div style={{ 
-          padding: '24px 16px', 
+        <div style={{
+          padding: '24px 16px',
           borderBottom: `1px solid ${theme.colors.borderGrey}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: sidebarCollapsed ? 'center' : 'space-between'
         }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
             gap: sidebarCollapsed ? '0' : '12px',
             cursor: 'pointer',
           }} onClick={() => navigate('/dashboard')}>
@@ -83,7 +83,7 @@ const MainLayout = ({ children }) => {
             )}
           </div>
           {!sidebarCollapsed && (
-            <button 
+            <button
               onClick={toggleSidebar}
               style={{
                 background: 'none',
@@ -110,13 +110,13 @@ const MainLayout = ({ children }) => {
         </div>
 
         {/* Navigation Items */}
-        <div style={{ 
-          flex: 1, 
+        <div style={{
+          flex: 1,
           overflowY: 'auto',
           padding: '24px 0'
         }}>
           {navigationItems.map((item, index) => (
-            <div 
+            <div
               key={index}
               style={{
                 padding: '14px 20px',
@@ -155,13 +155,13 @@ const MainLayout = ({ children }) => {
 
         {/* Sidebar Toggle Button (when collapsed) */}
         {sidebarCollapsed && (
-          <div style={{ 
-            padding: '16px', 
+          <div style={{
+            padding: '16px',
             borderTop: `1px solid ${theme.colors.borderGrey}`,
             display: 'flex',
             justifyContent: 'center'
           }}>
-            <button 
+            <button
               onClick={toggleSidebar}
               style={{
                 background: 'none',
@@ -186,9 +186,9 @@ const MainLayout = ({ children }) => {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ 
-        flex: 1, 
-        marginLeft: sidebarCollapsed ? '80px' : '280px', 
+      <div style={{
+        flex: 1,
+        marginLeft: sidebarCollapsed ? '80px' : '280px',
         transition: 'margin-left 0.3s ease',
         display: 'flex',
         flexDirection: 'column',
@@ -208,7 +208,7 @@ const MainLayout = ({ children }) => {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {!sidebarCollapsed && (
-              <button 
+              <button
                 onClick={toggleSidebar}
                 style={{
                   background: 'none',
@@ -238,7 +238,7 @@ const MainLayout = ({ children }) => {
               {getDashboardTitle(user?.role)}
             </h1>
           </div>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <div style={{ textAlign: 'right' }}>
               <div style={{
@@ -269,7 +269,7 @@ const MainLayout = ({ children }) => {
             }}>
               {user?.fullName?.charAt(0) || 'U'}
             </div>
-            <button 
+            <button
               onClick={handleLogout}
               style={{
                 padding: '10px 20px',
@@ -294,8 +294,8 @@ const MainLayout = ({ children }) => {
         </div>
 
         {/* Page Content */}
-        <div style={{ 
-          flex: 1, 
+        <div style={{
+          flex: 1,
           padding: '24px',
           backgroundColor: theme.colors.background,
           minHeight: 'calc(100vh - 72px)',
@@ -315,7 +315,7 @@ const MainLayout = ({ children }) => {
 
 // Helper function to get navigation items based on role
 const getNavigationItems = (role) => {
-  switch(role) {
+  switch (role) {
     case 'Owner':
       return [
         { label: 'Dashboard', path: '/owner', icon: '🏠' },
@@ -358,7 +358,7 @@ const getNavigationItems = (role) => {
 
 // Helper function to get dashboard title based on role
 const getDashboardTitle = (role) => {
-  switch(role) {
+  switch (role) {
     case 'Owner':
       return 'Owner Dashboard';
     case 'Marketing Manager':

@@ -113,4 +113,9 @@ const InfoItem = ({ icon: Icon, label, value }) => (
     </div>
 );
 
+export { UserProfilePage };
+export { default as MarketingDashboard } from './MarketingDashboard';
+export { default as ProductionDashboard } from './ProductionDashboard';
+export { default as OwnerDashboard } from './OwnerDashboard';
+
 export default UserProfilePage;

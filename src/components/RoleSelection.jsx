@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '../global/theme';
-import { textStyles } from '../global/textStyles';
+import styles from './RoleSelection.module.css';
 
 const RoleSelection = () => {
   const navigate = useNavigate();
@@ -19,128 +19,58 @@ const RoleSelection = () => {
   };
 
   return (
-    <div style={{
-      backgroundColor: theme.colors.background,
-      minHeight: '100vh',
-      padding: '40px 60px', // reduced padding for desktop
-      boxSizing: 'border-box',
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '1800px', // wider container for large screens
-        margin: '0 auto',
-      }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <h1 style={{
-            ...textStyles.headingLarge,
-            color: theme.colors.primaryText,
-            fontSize: '42px',
-            marginBottom: '16px',
-          }}>
-            Cattle Feed Management System
-          </h1>
-          <p style={{
-            ...textStyles.bodyMedium,
-            color: theme.colors.textGrey,
-            fontSize: '18px',
-            maxWidth: '800px',
-            margin: '0 auto',
-          }}>
-            Streamline operations, track performance, and make data-driven decisions
-          </p>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.contentWrapper}>
 
-        {/* Role Cards Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', // responsive columns
-          gap: '32px',
-          marginBottom: '40px',
-        }}>
+        {/* Left Section (Header) */}
+        <section className={styles.keyInfo}>
+          <h1 className={styles.heading}>
+            Cattle Feed
+            <br />
+            Management System
+          </h1>
+          <p className={styles.subHeading}>
+            Streamline operations, track performance, and make data-driven decisions
+            with our centralized enterprise dashboard.
+          </p>
+        </section>
+
+        {/* Right Section (Cards Grid) */}
+        <div className={styles.cardsGrid}>
           {roles.map((role) => (
             <div
               key={role.id}
+              className={styles.roleCard}
               onClick={() => handleRoleSelect(role.id)}
-              style={{
-                backgroundColor: theme.colors.white,
-                borderRadius: '16px',
-                border: `1px solid ${theme.colors.borderGrey}`,
-                padding: '30px 24px',
-                boxShadow: `0 8px 20px ${theme.colors.shadowGrey}`,
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-6px)';
-                e.currentTarget.style.boxShadow = `0 16px 32px ${theme.colors.shadowGrey}`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = `0 8px 20px ${theme.colors.shadowGrey}`;
-              }}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => e.key === 'Enter' && handleRoleSelect(role.id)}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '24px',
-              }}>
-                <div style={{
-                  padding: '18px',
-                  backgroundColor: `${role.color}26`,
-                  borderRadius: '12px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '60px',
-                  height: '60px',
-                  marginRight: '16px',
-                }}>
-                  <span style={{ fontSize: '28px', color: role.color }}>{role.icon}</span>
-                </div>
-                <h3 style={{
-                  ...textStyles.headingMedium,
-                  color: theme.colors.primaryText,
-                  fontSize: '22px',
-                  fontWeight: '600',
-                  margin: 0,
-                }}>
-                  {role.title}
-                </h3>
+              {/* Decorative Background Circle */}
+              <div
+                className={styles.decorativeBg}
+                style={{ color: role.color }}
+              />
+
+              <div
+                className={styles.iconBox}
+                style={{
+                  backgroundColor: `${role.color}15`,
+                  color: role.color
+                }}
+              >
+                {role.icon}
               </div>
 
-              <div style={{
-                width: '100%',
-                backgroundColor: theme.colors.softGreyBg,
-                borderRadius: '12px',
-                border: `1px solid ${role.color}4D`,
-                padding: '14px 12px',
-                textAlign: 'center',
-              }}>
-                <span style={{
-                  color: role.color,
-                  fontWeight: '600',
-                  fontSize: '14px',
-                }}>
-                  Access Dashboard
-                </span>
+              <h2 className={styles.cardTitle}>{role.title}</h2>
+
+              <div className={styles.cardAction}>
+                Access Dashboard <span>→</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Footer note */}
-        <div style={{
-          textAlign: 'center',
-          ...textStyles.bodyMedium,
-          color: theme.colors.textGrey,
-          fontSize: '16px',
-        }}>
-          Select your role to access your personalized dashboard
-        </div>
       </div>
     </div>
   );

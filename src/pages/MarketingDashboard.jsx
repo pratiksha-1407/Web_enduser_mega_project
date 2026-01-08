@@ -143,7 +143,7 @@ const MarketingDashboard = () => {
         {/* Taluka Chart */}
         <h2 style={sectionHeaderStyle}>Taluka-wise Sales Trend</h2>
         <p style={sectionSubHeaderStyle}>Reported sales volume</p>
-        
+
         <BarChart
           data={data[selectedDistrict]?.map(item => item.sales)}
           labels={data[selectedDistrict]?.map(item => item.taluka)}

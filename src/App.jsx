@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import LandingPage from './pages/LandingPage';
+import RoleSelection from './components/RoleSelection';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import DashboardHome from './pages/employee/DashboardHome';
@@ -12,13 +13,16 @@ import CreateOrderPage from './pages/employee/CreateOrderPage';
 import OrderHistoryPage from './pages/employee/OrderHistoryPage';
 import AttendancePage from './pages/employee/AttendancePage';
 import { MarketingDashboard, ProductionDashboard, OwnerDashboard, UserProfilePage } from './pages/RolePages';
+//import RoleSelection from './components/RoleSelection';
 
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
+
       {/* Public Routes */}
       <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/role" element={<RoleSelection />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Route>

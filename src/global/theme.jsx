@@ -40,3 +40,5 @@ export const theme = {
     slow: '0.5s ease-in-out',
   },
 };
+
+export default theme;

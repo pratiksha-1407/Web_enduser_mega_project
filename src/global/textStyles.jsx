@@ -73,3 +73,5 @@ export const textStyles = {
     color: colors.successGreen,
   },
 };
+
+export default textStyles;

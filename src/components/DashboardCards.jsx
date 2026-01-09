@@ -3,11 +3,11 @@ import theme from '../global/theme';
 import typography from '../global/textStyles';
 
 // Summary Card Component
-export const SummaryCard = ({ title, value, icon, onClick, color = theme.colors.global.primaryBlue }) => {
+export const SummaryCard = ({ title, value, icon, onClick, color = theme.colors.primaryBlue }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '14px',
     display: 'flex',
     flexDirection: 'column',
@@ -32,20 +32,20 @@ export const SummaryCard = ({ title, value, icon, onClick, color = theme.colors.
 
   const titleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
   };
 
   return (
-    <div 
+    <div
       style={cardStyle}
       onClick={onClick}
       onMouseEnter={(e) => {
         e.target.style.transform = 'translateY(-2px)';
-        e.target.style.boxShadow = `0 6px 16px ${theme.colors.shadows.grey}`;
+        e.target.style.boxShadow = `0 6px 16px ${theme.colors.shadowGrey}`;
       }}
       onMouseLeave={(e) => {
         e.target.style.transform = 'translateY(0)';
-        e.target.style.boxShadow = `0 4px 12px ${theme.colors.shadows.grey}`;
+        e.target.style.boxShadow = `0 4px 12px ${theme.colors.shadowGrey}`;
       }}
     >
       <span style={iconStyle}>{icon}</span>
@@ -58,9 +58,9 @@ export const SummaryCard = ({ title, value, icon, onClick, color = theme.colors.
 // KPI Card Component
 export const KPICard = ({ icon, title, value, growth, down = false }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 10px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 10px ${theme.colors.shadowGrey}`,
     padding: '16px',
     display: 'flex',
     flexDirection: 'column',
@@ -69,7 +69,7 @@ export const KPICard = ({ icon, title, value, growth, down = false }) => {
 
   const iconContainerStyle = {
     padding: '12px',
-    backgroundColor: theme.colors.primary.lightBlue,
+    backgroundColor: theme.colors.lightBlue,
     borderRadius: theme.borderRadius.lg,
     marginBottom: '12px',
   };
@@ -82,20 +82,20 @@ export const KPICard = ({ icon, title, value, growth, down = false }) => {
 
   const titleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
     marginBottom: '8px',
   };
 
   const growthStyle = {
     ...typography.bodyMedium,
-    color: down ? theme.colors.global.danger : theme.colors.global.success,
+    color: down ? theme.colors.danger : theme.colors.success,
     fontWeight: 'bold',
   };
 
   return (
     <div style={cardStyle}>
       <div style={iconContainerStyle}>
-        <span style={{ color: theme.colors.global.primaryBlue, fontSize: '28px' }}>{icon}</span>
+        <span style={{ color: theme.colors.primaryBlue, fontSize: '28px' }}>{icon}</span>
       </div>
       <div style={valueStyle}>{value}</div>
       <div style={titleStyle}>{title}</div>
@@ -107,9 +107,9 @@ export const KPICard = ({ icon, title, value, growth, down = false }) => {
 // Status Card Component
 export const StatusCard = ({ title, value, status, statusColor, icon, onClick }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
     cursor: onClick ? 'pointer' : 'default',
     transition: 'transform 0.2s',
@@ -125,13 +125,13 @@ export const StatusCard = ({ title, value, status, statusColor, icon, onClick })
   const titleStyle = {
     ...typography.headingSmall,
     margin: 0,
-    color: theme.colors.text.primary,
+    color: theme.colors.primaryText,
   };
 
   const valueStyle = {
     ...typography.metric,
     fontSize: '18px',
-    color: theme.colors.text.primary,
+    color: theme.colors.primaryText,
     marginBottom: '4px',
   };
 
@@ -142,7 +142,7 @@ export const StatusCard = ({ title, value, status, statusColor, icon, onClick })
   };
 
   return (
-    <div 
+    <div
       style={cardStyle}
       onClick={onClick}
       onMouseEnter={(e) => {
@@ -169,9 +169,9 @@ export const StatusCard = ({ title, value, status, statusColor, icon, onClick })
 // Performance Card Component
 export const PerformanceCard = ({ title, subtitle, data, labels }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
   };
 
@@ -182,7 +182,7 @@ export const PerformanceCard = ({ title, subtitle, data, labels }) => {
 
   const subtitleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
     marginBottom: '20px',
   };
 
@@ -197,7 +197,7 @@ export const PerformanceCard = ({ title, subtitle, data, labels }) => {
 
   const barStyle = {
     width: '20px',
-    backgroundColor: theme.colors.global.primaryBlue,
+    backgroundColor: theme.colors.primaryBlue,
     borderRadius: '4px',
     position: 'relative',
   };
@@ -209,16 +209,16 @@ export const PerformanceCard = ({ title, subtitle, data, labels }) => {
       <div style={chartContainerStyle}>
         {data && labels && data.map((value, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-            <div 
-              style={{ 
-                ...barStyle, 
-                height: `${(value / Math.max(...data)) * 150}px`, 
-                backgroundColor: theme.colors.global.primaryBlue 
-              }} 
+            <div
+              style={{
+                ...barStyle,
+                height: `${(value / Math.max(...data)) * 150}px`,
+                backgroundColor: theme.colors.primaryBlue
+              }}
             />
-            <div style={{ 
-              ...typography.bodyMuted, 
-              color: theme.colors.global.textGrey, 
+            <div style={{
+              ...typography.bodyMuted,
+              color: theme.colors.textGrey,
               marginTop: '8px',
               fontSize: '10px'
             }}>
@@ -232,11 +232,11 @@ export const PerformanceCard = ({ title, subtitle, data, labels }) => {
 };
 
 // Metric Card Component
-export const MetricCard = ({ title, value, icon, description, color = theme.colors.global.primaryBlue }) => {
+export const MetricCard = ({ title, value, icon, description, color = theme.colors.primaryBlue }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
     display: 'flex',
     alignItems: 'center',
@@ -261,12 +261,12 @@ export const MetricCard = ({ title, value, icon, description, color = theme.colo
 
   const titleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
   };
 
   const descriptionStyle = {
     ...typography.bodySmall,
-    color: theme.colors.text.secondary,
+    color: theme.colors.secondaryText,
     marginTop: '8px',
   };
 
@@ -285,11 +285,11 @@ export const MetricCard = ({ title, value, icon, description, color = theme.colo
 };
 
 // Bar Chart Component
-export const BarChart = ({ data, labels, title, subtitle, color = theme.colors.global.primaryBlue }) => {
+export const BarChart = ({ data, labels, title, subtitle, color = theme.colors.primaryBlue }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
   };
 
@@ -300,7 +300,7 @@ export const BarChart = ({ data, labels, title, subtitle, color = theme.colors.g
 
   const subtitleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
     marginBottom: '20px',
   };
 
@@ -327,16 +327,16 @@ export const BarChart = ({ data, labels, title, subtitle, color = theme.colors.g
       <div style={chartContainerStyle}>
         {data && labels && data.map((value, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-            <div 
-              style={{ 
-                ...barStyle, 
-                height: `${(value / Math.max(...data)) * 150}px`, 
-                backgroundColor: color 
-              }} 
+            <div
+              style={{
+                ...barStyle,
+                height: `${(value / Math.max(...data)) * 150}px`,
+                backgroundColor: color
+              }}
             />
-            <div style={{ 
-              ...typography.bodyMuted, 
-              color: theme.colors.global.textGrey, 
+            <div style={{
+              ...typography.bodyMuted,
+              color: theme.colors.textGrey,
               marginTop: '8px',
               fontSize: '10px'
             }}>
@@ -350,11 +350,11 @@ export const BarChart = ({ data, labels, title, subtitle, color = theme.colors.g
 };
 
 // Line Chart Component
-export const LineChart = ({ data, labels, title, subtitle, color = theme.colors.global.primaryBlue }) => {
+export const LineChart = ({ data, labels, title, subtitle, color = theme.colors.primaryBlue }) => {
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
-    boxShadow: `0 4px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
   };
 
@@ -365,7 +365,7 @@ export const LineChart = ({ data, labels, title, subtitle, color = theme.colors.
 
   const subtitleStyle = {
     ...typography.bodySmall,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
     marginBottom: '20px',
   };
 
@@ -405,28 +405,28 @@ export const LineChart = ({ data, labels, title, subtitle, color = theme.colors.
         {data && labels && data.map((value, index) => {
           const heightPercentage = (value / Math.max(...data)) * 150;
           const leftPosition = `${(index / (data.length - 1)) * 100}%`;
-          
+
           return (
-            <div 
-              key={index} 
-              style={{ 
-                position: 'relative', 
-                height: '100%', 
+            <div
+              key={index}
+              style={{
+                position: 'relative',
+                height: '100%',
                 width: '100%',
                 display: 'flex',
                 alignItems: 'flex-end',
                 justifyContent: 'center'
               }}
             >
-              <div 
-                style={{ 
-                  ...linePointStyle, 
+              <div
+                style={{
+                  ...linePointStyle,
                   left: leftPosition,
                   bottom: `${heightPercentage}px`,
-                }} 
+                }}
               />
               {index < data.length - 1 && (
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     height: '2px',

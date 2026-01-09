@@ -34,7 +34,7 @@ const OwnerDashboard = () => {
   ];
 
   const appBarStyle = {
-    backgroundColor: theme.colors.global.primaryBlue,
+    backgroundColor: theme.colors.primaryBlue,
     color: 'white',
     padding: '16px',
     display: 'flex',
@@ -48,16 +48,16 @@ const OwnerDashboard = () => {
   };
 
   const pageContainer = {
-    backgroundColor: theme.colors.global.background,
+    backgroundColor: theme.colors.background,
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
   };
 
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: '16px',
-    boxShadow: `0 4px 10px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 4px 10px ${theme.colors.shadowGrey}`,
     padding: '16px',
     marginBottom: '16px',
   };
@@ -98,7 +98,7 @@ const OwnerDashboard = () => {
   };
 
   const viewAllStyle = {
-    color: theme.colors.global.primaryBlue,
+    color: theme.colors.primaryBlue,
     cursor: 'pointer',
   };
 
@@ -144,7 +144,7 @@ const OwnerDashboard = () => {
           labels={revenueData.map(item => item.month)}
           title="Revenue Trend"
           subtitle="Last 6 months"
-          color={theme.colors.global.primaryBlue}
+          color={theme.colors.primaryBlue}
         />
 
         {/* Production by Product Chart */}
@@ -157,7 +157,7 @@ const OwnerDashboard = () => {
           labels={productionData.map(item => item.product)}
           title="Production by Product"
           subtitle="This month (tons)"
-          color={theme.colors.global.primaryBlue}
+          color={theme.colors.primaryBlue}
         />
 
         {/* Branch Performance */}
@@ -171,7 +171,7 @@ const OwnerDashboard = () => {
               width: '44px',
               height: '44px',
               borderRadius: '50%',
-              backgroundColor: `${theme.colors.global.primaryBlue}1A`, // 10% opacity
+              backgroundColor: `${theme.colors.primaryBlue}1A`, // 10% opacity
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -185,7 +185,7 @@ const OwnerDashboard = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ ...typography.bodySmall, color: theme.colors.global.textGrey }}>
+                  <div style={{ ...typography.bodySmall, color: theme.colors.textGrey }}>
                     Revenue
                   </div>
                   <div style={{ ...typography.bodyRegular, fontWeight: 'bold' }}>
@@ -193,7 +193,7 @@ const OwnerDashboard = () => {
                   </div>
                 </div>
                 <div>
-                  <div style={{ ...typography.bodySmall, color: theme.colors.global.textGrey }}>
+                  <div style={{ ...typography.bodySmall, color: theme.colors.textGrey }}>
                     Production
                   </div>
                   <div style={{ ...typography.bodyRegular, fontWeight: 'bold' }}>
@@ -201,7 +201,7 @@ const OwnerDashboard = () => {
                   </div>
                 </div>
                 <div>
-                  <div style={{ ...typography.bodySmall, color: theme.colors.global.textGrey }}>
+                  <div style={{ ...typography.bodySmall, color: theme.colors.textGrey }}>
                     Sales
                   </div>
                   <div style={{ ...typography.bodyRegular, fontWeight: 'bold' }}>

@@ -279,6 +279,7 @@
 .gradientText {
     background: linear-gradient(135deg, var(--lp-primary) 0%, #3b82f6 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -573,7 +574,7 @@
     padding: 0 2rem;
     display: flex;
     flex-direction: column;
-    items-align: center;
+    align-items: center;
     gap: 2rem;
     text-align: center;
 }

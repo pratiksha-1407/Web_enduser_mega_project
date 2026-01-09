@@ -39,6 +39,13 @@ export const theme = {
     normal: '0.3s ease-in-out',
     slow: '0.5s ease-in-out',
   },
+  borderRadius: {
+    xs: '4px',
+    sm: '6px',
+    md: '8px',
+    lg: '12px',
+    xl: '16px',
+  },
 };
 
 export default theme;

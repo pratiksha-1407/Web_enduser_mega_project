@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { createClient } from "@supabase/supabase-js";
-
-// Initialize Supabase
-const supabaseUrl = "https://lvauizjdocxinwhfducq.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2YXVpempkb2N4aW53aGZkdWNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MDE5NTMsImV4cCI6MjA4MTQ3Nzk1M30.lOtq29C2hZ2SyD9Pn7lHpeLP65BhvbINk-Nwi6kWx3c";
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../services/supabaseClient';
 
 // Create the AuthContext
 const AuthContext = createContext();
@@ -21,7 +16,7 @@ export const useAuth = () => {
 // AuthProvider component
 // Helper function to convert role selection to proper role name
 const getRoleFromSelection = (roleSelection) => {
-  switch(roleSelection) {
+  switch (roleSelection) {
     case 'employee':
       return 'Employee';
     case 'marketing':
@@ -56,17 +51,17 @@ export const AuthProvider = ({ children }) => {
           // Check Supabase session
           const { data: { session }, error } = await supabase.auth.getSession();
           if (error) throw error;
-          
+
           if (session) {
             // Get user role from employees table
             const { data: employee, error: empError } = await supabase
-              .from("employees")
+              .from("emp_profile")
               .select()
               .eq("user_id", session.user.id)
               .maybeSingle();
-            
+
             if (empError) throw empError;
-            
+
             if (employee) {
               const userData = {
                 id: session.user.id,
@@ -74,7 +69,7 @@ export const AuthProvider = ({ children }) => {
                 fullName: employee.full_name || session.user.user_metadata?.full_name || 'User',
                 role: employee.role,
               };
-              
+
               localStorage.setItem('cattleFeedUser', JSON.stringify(userData));
               setUser(userData);
             }
@@ -88,7 +83,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    
+
     checkInitialSession();
   }, []);
 
@@ -100,14 +95,14 @@ export const AuthProvider = ({ children }) => {
         email: email.trim(),
         password: password.trim(),
       });
-      
+
       if (error) throw error;
-      
+
       const user = data.user;
-      
+
       // Check role from employees table
       const { data: employee, error: empError } = await supabase
-        .from("employees")
+        .from("emp_profile")
         .select()
         .eq("email", email.trim())
         .maybeSingle();
@@ -121,11 +116,11 @@ export const AuthProvider = ({ children }) => {
       // Attach user_id if not set
       if (!employee.user_id) {
         await supabase
-          .from("employees")
+          .from("emp_profile")
           .update({ user_id: user.id })
           .eq("email", email.trim());
       }
-      
+
       // Create user object with role
       const userData = {
         id: user.id,
@@ -133,7 +128,7 @@ export const AuthProvider = ({ children }) => {
         fullName: employee.full_name || user.user_metadata?.full_name || 'User',
         role: employee.role,
       };
-      
+
       // Store user in localStorage
       localStorage.setItem('cattleFeedUser', JSON.stringify(userData));
       setUser(userData);
@@ -154,30 +149,30 @@ export const AuthProvider = ({ children }) => {
         password: password.trim(),
         options: { data: { full_name: fullName.trim() } },
       });
-      
+
       if (error) throw error;
-      
+
       const user = data.user;
-      
+
       // Get selected role from localStorage
       const selectedRole = localStorage.getItem('selectedRole') || 'Employee';
-      
+
       // Insert user into employees table with role
       const { error: insertError } = await supabase
-        .from('employees')
+        .from('emp_profile')
         .insert([{
           email: email.trim(),
           full_name: fullName.trim(),
           role: getRoleFromSelection(selectedRole),
           user_id: user.id,
         }]);
-      
+
       if (insertError) {
         // If insertion fails, sign out the user
         await supabase.auth.signOut();
         throw insertError;
       }
-      
+
       // Create user object
       const userData = {
         id: user.id,
@@ -185,7 +180,7 @@ export const AuthProvider = ({ children }) => {
         fullName: fullName,
         role: getRoleFromSelection(selectedRole),
       };
-      
+
       // Store user in localStorage
       localStorage.setItem('cattleFeedUser', JSON.stringify(userData));
       setUser(userData);
@@ -206,7 +201,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Error during logout:', error);
     }
-    
+
     // Clear user from localStorage
     localStorage.removeItem('cattleFeedUser');
     setUser(null);

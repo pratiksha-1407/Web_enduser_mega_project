@@ -113,7 +113,7 @@ const LandingPage = () => {
                             </p>
 
                             <div className={styles.ctaGroup}>
-                                <Link to="/login" className={styles.primaryCta}>
+                                <Link to="/role" className={styles.primaryCta}>
                                     Enter User Dashboard
                                     <ArrowRight size={18} />
                                 </Link>

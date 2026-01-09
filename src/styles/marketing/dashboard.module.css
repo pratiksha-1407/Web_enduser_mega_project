@@ -1,0 +1,314 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: #64748b;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.statCard {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.blueGradient {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+}
+
+.blueGradient .statLabel {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.statContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1;
+}
+
+.statLabel {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.statValue {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.statSubText {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.blueGradient .statSubText {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.statIcon {
+    opacity: 0.2;
+}
+
+/* Circular Progress */
+.progressRing {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circularChart {
+    width: 100%;
+    height: 100%;
+}
+
+.circleBg {
+    fill: none;
+    stroke: #f1f5f9;
+    stroke-width: 3;
+}
+
+.circle {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.3s ease;
+}
+
+.percentage {
+    position: absolute;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.chartCard,
+.targetCard {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.headerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cardTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.chartSubtitle {
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.locationBadge,
+.monthBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.chartWrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+/* Target Card Styles */
+.noTarget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.warnIcon {
+    color: #f59e0b;
+    margin-bottom: 16px;
+}
+
+.noTarget h4 {
+    margin: 0 0 8px;
+    color: #1e293b;
+}
+
+.noTarget p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.targetMetrics {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metricItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metricLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.metricValues {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.current {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.goal {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.progressBar {
+    height: 8px;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: #2563eb;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.green {
+    background-color: #10b981;
+}
+
+.remarksBox {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+}
+
+.remarksTitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+}
+
+.remarksBox p {
+    font-size: 13px;
+    color: #334155;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.lastUpdated {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+@media (max-width: 1280px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mainGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+}

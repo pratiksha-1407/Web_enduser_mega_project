@@ -1,7 +1,21 @@
 .dashboard {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
+    padding-bottom: 40px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Loading & Error States */
@@ -9,16 +23,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 256px;
+    height: 60vh;
 }
 
 .spinner {
-    width: 32px;
-    height: 32px;
-    border: 2px solid #E5E7EB;
-    border-bottom-color: #2563EB;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #E5E7EB;
+    border-bottom-color: #3B82F6;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
 }
 
 @keyframes spin {
@@ -32,61 +46,101 @@
     text-align: center;
     color: #EF4444;
     background-color: #FEF2F2;
-    border-radius: 8px;
+    border-radius: 16px;
+    border: 1px solid #FECACA;
+    margin: 20px;
 }
 
 .retryButton {
     margin-top: 16px;
-    background: none;
-    border: none;
-    color: #2563EB;
-    text-decoration: underline;
+    background: #FFFFFF;
+    border: 1px solid #EF4444;
+    color: #EF4444;
+    padding: 8px 16px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.retryButton:hover {
+    background: #EF4444;
+    color: #FFFFFF;
 }
 
 /* Welcome Section */
 .welcomeSection {
-    margin-bottom: 8px;
+    background: linear-gradient(135deg, #1E40AF, #3B82F6);
+    padding: 32px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcomeSection::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
 }
 
 .welcomeSection h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #111827;
-    margin: 0;
-    letter-spacing: -0.02em;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    position: relative;
+    z-index: 1;
 }
 
 .welcomeSection p {
-    color: #6B7280;
-    font-size: 14px;
-    margin-top: 4px;
+    font-size: 16px;
+    color: #DBEAFE;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
 }
 
 /* Attendance Card */
 .attendanceCard {
     background-color: #FFFFFF;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    border-left: 4px solid #F59E0B;
-    /* Warning/Pending Color */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 20px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.attendanceCard::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: #F59E0B;
+}
+
+.attendanceCard.attendanceMarked::after {
+    background-color: #10B981;
 }
 
 .attendanceCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.attendanceMarked {
-    border-left-color: #10B981;
-    /* Success Green */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #D1D5DB;
 }
 
 .attendanceContent {
@@ -94,15 +148,15 @@
 }
 
 .attendanceIcon {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
     background-color: #FFFBEB;
-    /* Light Amber */
     color: #F59E0B;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .attendanceMarked .attendanceIcon {
@@ -111,151 +165,160 @@
 }
 
 .cardTitle {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     color: #111827;
-    margin: 0;
+    margin: 0 0 4px 0;
 }
 
 .cardSub {
-    font-size: 13px;
+    font-size: 14px;
     color: #6B7280;
-    margin: 2px 0 0 0;
+    margin: 0;
 }
 
 .actionArrow {
-    margin-left: auto;
     color: #9CA3AF;
-    transition: color 0.2s;
+    transition: transform 0.2s;
 }
 
 .attendanceCard:hover .actionArrow {
     color: #2563EB;
+    transform: translateX(4px);
 }
 
 /* Grid Layout for Stats */
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
 }
 
 .statCard {
     background-color: #FFFFFF;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #E5E7EB;
-    transition: all 0.2s ease;
+    border: 1px solid #F3F4F6;
+    transition: all 0.3s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .statCard:hover {
-    border-color: #BFDBFE;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    /* Blue glow */
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1);
+    border-color: #E5E7EB;
 }
 
 .statHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 .statIconWrapper {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #F3F4F6;
     color: #6B7280;
+    transition: transform 0.3s;
+}
+
+.statCard:hover .statIconWrapper {
+    transform: scale(1.1);
 }
 
 .iconBlue {
-    background-color: #EFF6FF;
+    background: linear-gradient(135deg, #EFF6FF, #BFDBFE);
     color: #2563EB;
 }
 
 .iconOrange {
-    background-color: #FFF7ED;
+    background: linear-gradient(135deg, #FFF7ED, #FED7AA);
     color: #EA580C;
 }
 
 .iconGreen {
-    background-color: #ECFDF5;
+    background: linear-gradient(135deg, #ECFDF5, #A7F3D0);
     color: #059669;
 }
 
 .statValue {
-    font-size: 28px;
-    font-weight: 700;
-    color: #111827;
+    font-size: 36px;
+    font-weight: 800;
+    color: #1F2937;
     line-height: 1;
-    margin: 0 0 4px 0;
+    margin: 0 0 8px 0;
+    font-feature-settings: "tnum";
 }
 
 .statLabel {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     color: #6B7280;
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .sectionTitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.emptyIcon {
-    color: #9CA3AF;
+    gap: 10px;
 }
 
 /* Chart Section */
 .chartContainer {
     background-color: #FFFFFF;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: 16px;
+    padding: 32px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #E5E7EB;
+    border: 1px solid #F3F4F6;
 }
 
 .chartHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F3F4F6;
 }
 
 .chartSelect {
     background-color: #F9FAFB;
     border: 1px solid #E5E7EB;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 14px;
-    padding: 4px 8px;
-    color: #4B5563;
+    padding: 6px 12px;
+    color: #374151;
     outline: none;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .chartSelect:focus {
-    border-color: #2563EB;
+    border-color: #3B82F6;
+    ring: 2px solid #BFDBFE;
 }
 
 .monthStats {
     display: flex;
-    gap: 32px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #F3F4F6;
+    gap: 48px;
+    margin-bottom: 32px;
 }
 
 .monthStatItem {
@@ -264,8 +327,8 @@
 }
 
 .monthStatValue {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 800;
     color: #111827;
 }
 
@@ -282,15 +345,16 @@
 }
 
 .monthStatLabel {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6B7280;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9CA3AF;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
 }
 
 .chartWrapper {
-    height: 300px;
+    height: 350px;
     width: 100%;
 }
 
@@ -301,28 +365,46 @@
     align-items: center;
     justify-content: center;
     background-color: #F9FAFB;
-    border-radius: 8px;
+    border-radius: 12px;
     color: #9CA3AF;
+    border: 2px dashed #E5E7EB;
 }
 
 .emptyChartIcon {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     opacity: 0.5;
 }
 
 .emptyChartText {
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 /* Mobile Adjustments */
 @media (max-width: 640px) {
+    .dashboard {
+        gap: 24px;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
     .monthStats {
         flex-direction: row;
         justify-content: space-between;
-        gap: 12px;
+        gap: 16px;
     }
 
     .monthStatValue {
-        font-size: 16px;
+        font-size: 18px;
+    }
+
+    .welcomeSection {
+        padding: 24px;
+    }
+
+    .welcomeSection h1 {
+        font-size: 24px;
     }
 }

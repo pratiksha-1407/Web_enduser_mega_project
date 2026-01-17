@@ -11,7 +11,8 @@ import {
     BarChart2,
     Check,
     ChevronRight,
-    TrendingUp
+    TrendingUp,
+    AlertCircle
 } from 'lucide-react';
 import {
     BarChart,
@@ -79,9 +80,10 @@ const Dashboard = () => {
 
     if (error) return (
         <div className={styles.errorContainer}>
+            <AlertCircle size={48} style={{ margin: '0 auto 16px', opacity: 0.5 }} />
             <p>{error}</p>
             <button onClick={() => window.location.reload()} className={styles.retryButton}>
-                Retry
+                Retry Connection
             </button>
         </div>
     );
@@ -99,46 +101,49 @@ const Dashboard = () => {
     const currentMonthAchieved = targetData.achieved?.[currentMonthIndex] || 0;
     const progress = currentMonthTarget > 0 ? Math.round((currentMonthAchieved / currentMonthTarget) * 100) : 0;
 
+    // Date for Welcome
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' });
+
     return (
         <div className={styles.dashboard}>
             {/* Welcome */}
             <div className={styles.welcomeSection}>
-                <h1>Welcome back, {profile?.full_name?.split(' ')[0] || 'Employee'}</h1>
-                <p>Here is your daily performance overview.</p>
+                <h1>Hello, {profile?.full_name?.split(' ')[0] || 'Employee'}! 👋</h1>
+                <p>{today} • Here is your daily activity overview</p>
             </div>
 
-            {/* Attendance Card */}
+            {/* Attendance Card - Call to Action */}
             <div
                 className={`${styles.attendanceCard} ${attendanceMarked ? styles.attendanceMarked : ''}`}
                 onClick={() => !attendanceMarked && navigate('/employee/attendance/mark')}
             >
                 <div className={styles.attendanceIcon}>
-                    {attendanceMarked ? <Check size={24} /> : <CalendarCheck size={24} />}
+                    {attendanceMarked ? <Check size={32} strokeWidth={3} /> : <CalendarCheck size={32} />}
                 </div>
                 <div className={styles.attendanceContent}>
                     <h3 className={styles.cardTitle}>
-                        {attendanceMarked ? "Attendance Marked" : "Action Required: Mark Attendance"}
+                        {attendanceMarked ? "Attendance Recorded" : "Mark Today's Attendance"}
                     </h3>
                     <p className={styles.cardSub}>
                         {attendanceMarked
-                            ? "You have successfully successfully marked your attendance for today."
-                            : "Your daily attendance has not been recorded yet. Click to mark now."}
+                            ? `You checked in successfully. Have a productive day!`
+                            : "Your daily attendance is pending. Tap here to verify location and selfie."}
                     </p>
                 </div>
-                {!attendanceMarked && <ChevronRight className={styles.actionArrow} size={20} />}
+                {!attendanceMarked && <ChevronRight className={styles.actionArrow} size={24} />}
             </div>
 
             {/* Orders Section */}
             <div>
                 <h2 className={styles.sectionTitle}>
-                    <ShoppingCart size={20} className="text-gray-400" />
-                    Order Metrics
+                    <ShoppingCart size={22} className="text-blue-500" />
+                    Order Intelligence
                 </h2>
                 <div className={styles.statsGrid}>
                     <div className={styles.statCard} onClick={() => navigate('/employee/orders/total')}>
                         <div className={styles.statHeader}>
                             <div className={`${styles.statIconWrapper} ${styles.iconBlue}`}>
-                                <ShoppingCart size={20} />
+                                <ShoppingCart size={24} />
                             </div>
                         </div>
                         <div>
@@ -149,23 +154,23 @@ const Dashboard = () => {
                     <div className={styles.statCard} onClick={() => navigate('/employee/orders/pending')}>
                         <div className={styles.statHeader}>
                             <div className={`${styles.statIconWrapper} ${styles.iconOrange}`}>
-                                <Clock size={20} />
+                                <Clock size={24} />
                             </div>
                         </div>
                         <div>
                             <h3 className={styles.statValue}>{orderCounts.pending}</h3>
-                            <p className={styles.statLabel}>Pending Processing</p>
+                            <p className={styles.statLabel}>Pending</p>
                         </div>
                     </div>
                     <div className={styles.statCard} onClick={() => navigate('/employee/orders/completed')}>
                         <div className={styles.statHeader}>
                             <div className={`${styles.statIconWrapper} ${styles.iconGreen}`}>
-                                <CheckCircle size={20} />
+                                <CheckCircle size={24} />
                             </div>
                         </div>
                         <div>
                             <h3 className={styles.statValue}>{orderCounts.completed}</h3>
-                            <p className={styles.statLabel}>Completed Orders</p>
+                            <p className={styles.statLabel}>Completed</p>
                         </div>
                     </div>
                 </div>
@@ -175,11 +180,11 @@ const Dashboard = () => {
             <div className={styles.chartContainer}>
                 <div className={styles.chartHeader}>
                     <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-                        <TrendingUp size={20} className="text-gray-400" />
+                        <TrendingUp size={22} className="text-blue-500" />
                         Sales Performance
                     </h2>
                     <select className={styles.chartSelect}>
-                        <option>{new Date().getFullYear()}</option>
+                        <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
                     </select>
                 </div>
 
@@ -202,9 +207,9 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className={styles.chartWrapper} style={{ width: '100%', height: 300 }}>
+                <div className={styles.chartWrapper}>
                     {chartData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={300}>
+                        <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                 <XAxis
@@ -212,22 +217,23 @@ const Dashboard = () => {
                                     axisLine={false}
                                     tickLine={false}
                                     fontSize={12}
-                                    tick={{ fill: '#6B7280' }}
+                                    tick={{ fill: '#6B7280', fontWeight: 500 }}
                                     dy={10}
                                 />
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
                                     fontSize={12}
-                                    tick={{ fill: '#6B7280' }}
+                                    tick={{ fill: '#6B7280', fontWeight: 500 }}
                                 />
                                 <Tooltip
                                     cursor={{ fill: '#F9FAFB' }}
                                     contentStyle={{
-                                        borderRadius: '8px',
+                                        borderRadius: '12px',
                                         border: 'none',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        padding: '12px'
+                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                        padding: '12px',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)'
                                     }}
                                 />
                                 <Legend
@@ -238,16 +244,22 @@ const Dashboard = () => {
                                     dataKey="Target"
                                     fill="#E5E7EB"
                                     radius={[4, 4, 0, 0]}
-                                    barSize={24}
+                                    barSize={20}
                                     name="Target (Tons)"
                                 />
                                 <Bar
                                     dataKey="Achieved"
-                                    fill="#2563EB"
+                                    fill="url(#colorAchieved)"
                                     radius={[4, 4, 0, 0]}
-                                    barSize={24}
+                                    barSize={20}
                                     name="Achieved (Tons)"
                                 />
+                                <defs>
+                                    <linearGradient id="colorAchieved" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#2563EB" stopOpacity={1} />
+                                        <stop offset="100%" stopColor="#3B82F6" stopOpacity={0.8} />
+                                    </linearGradient>
+                                </defs>
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (

@@ -1,22 +1,23 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
 }
 
 .loadingContainer {
-    padding: 32px;
+    padding: 64px;
     text-align: center;
-    color: #6B7280;
+    color: #64748B;
     font-size: 16px;
+    font-weight: 500;
 }
 
 /* Header Section */
 .header {
     background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E2E8F0;
     padding: 32px;
     display: flex;
     justify-content: space-between;
@@ -31,8 +32,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 8px;
-    background: linear-gradient(90deg, #2563EB, #60A5FA);
+    height: 6px;
+    background: linear-gradient(90deg, #3B82F6, #60A5FA);
 }
 
 .profileInfo {
@@ -46,18 +47,18 @@
 }
 
 .avatar {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
-    background-color: #F3F4F6;
-    border: 4px solid #FFFFFF;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background-color: #F8FAFC;
+    border: 5px solid #FFFFFF;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
-    font-weight: 700;
-    color: #2563EB;
+    font-size: 36px;
+    font-weight: 800;
+    color: #3B82F6;
     overflow: hidden;
 }
 
@@ -69,9 +70,9 @@
 
 .editIcon {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    background-color: #2563EB;
+    bottom: 4px;
+    right: 4px;
+    background-color: #3B82F6;
     color: #FFFFFF;
     width: 32px;
     height: 32px;
@@ -79,61 +80,87 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #FFFFFF;
+    border: 3px solid #FFFFFF;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .editIcon:hover {
     transform: scale(1.1);
+    background-color: #2563EB;
 }
 
 .nameSection h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #111827;
+    font-size: 28px;
+    font-weight: 800;
+    color: #0F172A;
     margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .nameSection p {
-    color: #6B7280;
-    font-size: 14px;
-    margin: 4px 0 8px 0;
+    color: #64748B;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 4px 0 12px 0;
 }
 
 .statusBadge {
     display: inline-block;
-    padding: 4px 12px;
-    background-color: #ECFDF5;
-    color: #059669;
+    padding: 6px 14px;
+    background-color: #DCFCE7;
+    color: #15803D;
     border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid #BBF7D0;
 }
 
 /* ID Card Styles */
 .idCard {
     background: linear-gradient(135deg, #1E293B, #0F172A);
     color: #FFFFFF;
-    padding: 24px;
-    border-radius: 12px;
+    padding: 24px 32px;
+    border-radius: 16px;
     display: flex;
-    gap: 32px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    gap: 40px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.idCard::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+}
+
+.idItem {
+    position: relative;
+    z-index: 1;
 }
 
 .idItem h4 {
-    font-size: 11px;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: #94A3B8;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
+    font-weight: 600;
 }
 
 .idItem p {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Tabs */
@@ -142,10 +169,10 @@
     background-color: #FFFFFF;
     border-radius: 12px;
     padding: 6px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid #E2E8F0;
     gap: 8px;
     width: fit-content;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     margin-bottom: 24px;
 }
 
@@ -153,25 +180,25 @@
     padding: 10px 24px;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
-    color: #6B7280;
+    font-weight: 600;
+    color: #64748B;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tab:hover {
-    background-color: #F9FAFB;
-    color: #374151;
+    background-color: #F8FAFC;
+    color: #0F172A;
 }
 
 .activeTab {
-    background-color: #2563EB;
+    background-color: #3B82F6;
     color: #FFFFFF;
-    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
 .activeTab:hover {
-    background-color: #1D4ED8;
+    background-color: #2563EB;
     color: #FFFFFF;
 }
 
@@ -183,47 +210,65 @@
 
 .card {
     background-color: #FFFFFF;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 32px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #E5E7EB;
+    border: 1px solid #E2E8F0;
     margin-bottom: 24px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .sectionHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F1F5F9;
 }
 
 .cardTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1F2937;
+    font-size: 20px;
+    font-weight: 800;
+    color: #0F172A;
     margin: 0;
 }
 
 .editButton {
     background: none;
-    border: none;
-    color: #2563EB;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #3B82F6;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    text-decoration: none;
+    transition: all 0.2s;
 }
 
 .editButton:hover {
-    text-decoration: underline;
+    background-color: #EFF6FF;
+    border-color: #3B82F6;
 }
 
 .infoItem {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid #F3F4F6;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #F1F5F9;
 }
 
 .infoItem:last-child {
@@ -231,34 +276,37 @@
 }
 
 .iconBox {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background-color: #F3F4F6;
-    color: #6B7280;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: #F8FAFC;
+    color: #64748B;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid #F1F5F9;
 }
 
 .itemContent h5 {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6B7280;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .itemContent p {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
-    color: #111827;
-    margin: 2px 0 0 0;
+    color: #0F172A;
+    margin: 4px 0 0 0;
 }
 
 .actionButtons {
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid #E5E7EB;
+    border-top: 1px solid #F1F5F9;
     display: flex;
     gap: 16px;
 }
@@ -267,53 +315,64 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 24px;
-    border: 1px solid #D1D5DB;
+    padding: 12px 24px;
+    border: 1px solid #E2E8F0;
     background: #FFFFFF;
-    border-radius: 8px;
-    color: #374151;
-    font-weight: 500;
+    border-radius: 10px;
+    color: #475569;
+    font-weight: 600;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .outlineBtn:hover {
-    background-color: #F9FAFB;
-    border-color: #9CA3AF;
-    color: #111827;
+    background-color: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #0F172A;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Metrics Styles */
 .metricsRow {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 24px;
 }
 
 .metric {
     background-color: #F8FAFC;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 24px;
+    border-radius: 16px;
     border: 1px solid #E2E8F0;
+    transition: transform 0.2s;
+}
+
+.metric:hover {
+    transform: translateY(-2px);
+    border-color: #CBD5E1;
 }
 
 .metricTitle {
     font-size: 14px;
     color: #64748B;
-    font-weight: 500;
-    margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .metricValue {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 12px;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
 }
 
 .metricBar {
     width: 100%;
-    height: 6px;
+    height: 8px;
     background-color: #E2E8F0;
     border-radius: 9999px;
     overflow: hidden;
@@ -322,24 +381,25 @@
 .metricFill {
     height: 100%;
     border-radius: 9999px;
+    transition: width 1s ease-out;
 }
 
 .employeeMetric {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #F1F5F9;
 }
 
 .empMetricTitle {
-    font-size: 14px;
+    font-size: 15px;
     color: #475569;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .empMetricValue {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
 }
 
@@ -347,7 +407,7 @@
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
-        padding: 20px;
+        padding: 24px;
         gap: 24px;
     }
 
@@ -355,6 +415,7 @@
         width: 100%;
         flex-direction: column;
         gap: 16px;
+        box-sizing: border-box;
     }
 
     .actionButtons {

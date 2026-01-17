@@ -1,14 +1,15 @@
 .tableContainer {
     background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     border: 1px solid #E5E7EB;
     overflow: hidden;
+    margin-bottom: 24px;
 }
 
 .tableHeader {
-    padding: 20px 24px;
-    border-bottom: 1px solid #E5E7EB;
+    padding: 24px;
+    border-bottom: 1px solid #F3F4F6;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -20,23 +21,25 @@
 .titleGroup {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex: 1;
 }
 
 .iconWrapper {
-    padding: 8px;
-    background-color: #EFF6FF;
-    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    border-radius: 12px;
     color: #2563EB;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
 }
 
 .tableTitle {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     color: #111827;
     margin: 0;
 }
@@ -54,38 +57,49 @@
 }
 
 .filterSelect {
-    padding: 8px 12px;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
+    padding: 10px 16px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
     background-color: #FFFFFF;
     color: #374151;
     font-size: 14px;
+    font-weight: 500;
     outline: none;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.filterSelect:hover,
+.filterSelect:hover {
+    border-color: #CBD5E1;
+    background-color: #F8FAFC;
+}
+
 .filterSelect:focus {
-    border-color: #2563EB;
+    border-color: #3B82F6;
+    ring: 2px solid #BFDBFE;
 }
 
 .refreshBtn {
-    padding: 8px;
-    background: none;
-    border: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
     cursor: pointer;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-    color: #6B7280;
+    transition: all 0.2s;
+    color: #64748B;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .refreshBtn:hover {
-    background-color: #F3F4F6;
+    background-color: #EFF6FF;
     color: #2563EB;
+    border-color: #BFDBFE;
+    transform: rotate(15deg);
 }
 
 .spinning {
@@ -105,48 +119,54 @@
 
 .dataTable {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
 }
 
 .dataTable thead {
-    background-color: #F9FAFB;
-    border-bottom: 1px solid #E5E7EB;
+    background-color: #F8FAFC;
 }
 
 .dataTable th {
-    padding: 12px 24px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #6B7280;
+    padding: 16px 24px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748B;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     white-space: nowrap;
+    border-bottom: 1px solid #E2E8F0;
 }
 
 .dataTable tbody tr {
-    border-bottom: 1px solid #F3F4F6;
-    transition: background-color 0.15s ease;
+    transition: all 0.2s ease;
 }
 
-.dataTable tbody tr:last-child {
+.dataTable tbody tr td {
+    border-bottom: 1px solid #F1F5F9;
+    padding: 20px 24px;
+    font-size: 14px;
+    color: #334155;
+    vertical-align: middle;
+}
+
+.dataTable tbody tr:last-child td {
     border-bottom: none;
 }
 
 .dataTable tbody tr:hover {
-    background-color: #F9FAFB;
+    background-color: #F8FAFC;
 }
 
 /* Highlight Today's Row */
 .highlightRow {
-    background-color: #EFF6FF !important;
+    background-color: #F0F9FF !important;
+    /* light blue hue */
 }
 
-.dataTable td {
-    padding: 16px 24px;
-    font-size: 14px;
-    color: #374151;
-    vertical-align: middle;
+.highlightRow td {
+    border-bottom-color: #E0F2FE !important;
 }
 
 /* Cell Types */
@@ -154,93 +174,113 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    color: #475569;
+    background-color: #F8FAFC;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #F1F5F9;
+    display: inline-block;
 }
 
 .primaryText {
-    font-weight: 500;
-    color: #111827;
+    font-weight: 600;
+    color: #1E293B;
 }
 
 .secondaryText {
     font-size: 13px;
-    color: #6B7280;
-    margin-top: 2px;
+    color: #64748B;
+    margin-top: 4px;
 }
 
 .flexCell {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .linkText {
     color: #2563EB;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .linkText:hover {
     text-decoration: underline;
+    color: #1D4ED8;
 }
 
-/* Status Pills */
+/* Status Pills - More Pill-like */
 .statusPill {
     display: inline-flex;
     align-items: center;
-    padding: 4px 12px;
-    border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
     line-height: 1;
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .statusSuccess {
-    background-color: #ECFDF5;
-    color: #059669;
+    background-color: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
 }
 
 .statusPending {
-    background-color: #FFF7ED;
-    color: #EA580C;
+    background-color: #FFEDD5;
+    color: #C2410C;
+    border: 1px solid #FED7AA;
 }
 
 .statusPacking {
-    background-color: #EFF6FF;
-    color: #2563EB;
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
 }
 
 .statusReady {
-    background-color: #F0F9FF;
-    color: #0284C7;
+    background-color: #E0F2FE;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
 }
 
 .statusCancelled {
-    background-color: #FEF2F2;
-    color: #DC2626;
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
 }
 
 .statusAway {
-    background-color: #FEF2F2;
-    color: #EF4444;
+    background-color: #FFE4E6;
+    color: #BE123C;
+    border: 1px solid #FDA4AF;
 }
 
 /* Search Box */
 .searchBox {
     display: flex;
     align-items: center;
-    background-color: #F3F4F6;
-    border-radius: 8px;
-    padding: 8px 12px;
-    gap: 8px;
-    width: 250px;
-    border: 1px solid transparent;
+    background-color: #F8FAFC;
+    border-radius: 10px;
+    padding: 10px 14px;
+    gap: 10px;
+    width: 280px;
+    border: 1px solid #E2E8F0;
+    transition: all 0.2s;
 }
 
 .searchBox:focus-within {
-    border-color: #2563EB;
+    border-color: #3B82F6;
     background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .searchInput {
@@ -248,28 +288,28 @@
     background: transparent;
     outline: none;
     font-size: 14px;
-    color: #111827;
+    color: #1E293B;
     width: 100%;
 }
 
 .searchInput::placeholder {
-    color: #9CA3AF;
+    color: #94A3B8;
 }
 
 /* Empty / Loading */
 .centerMessage {
     text-align: center;
-    padding: 48px;
-    color: #6B7280;
+    padding: 64px 24px;
+    color: #64748B;
 }
 
 .loadingSpinner {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #E5E7EB;
+    width: 32px;
+    height: 32px;
+    border: 3px solid #E2E8F0;
     border-bottom-color: #2563EB;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 8px;
+    animation: spin 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+    margin-bottom: 12px;
 }

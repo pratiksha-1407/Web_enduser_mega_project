@@ -7,7 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // Pages
-import LandingPage from './pages/LandingPage';
+//import LandingPage from './pages/LandingPage';
 import RoleSelection from './components/RoleSelection';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
@@ -44,10 +44,10 @@ function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/role" element={<RoleSelection />} />
+        <Route path="/" element={<RoleSelection />} />
+        {/*<Route path="/role" element={<RoleSelection />} />
 
-        {/* Public Routes */}
+         Public Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />

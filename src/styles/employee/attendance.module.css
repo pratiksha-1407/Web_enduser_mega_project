@@ -1,0 +1,252 @@
+.container {
+    max-width: 672px;
+    /* max-w-2xl */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.welcomeSection {
+    margin-bottom: 8px;
+}
+
+.welcomeSection h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.welcomeSection p {
+    color: #6B7280;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E5E7EB;
+    overflow: hidden;
+}
+
+.stepProgress {
+    display: flex;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.stepItem {
+    flex: 1;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #9CA3AF;
+}
+
+.stepActive {
+    color: #2563EB;
+    border-bottom: 2px solid #2563EB;
+}
+
+.stepDone {
+    color: #2563EB;
+    border-bottom: 2px solid #2563EB;
+}
+
+.content {
+    padding: 32px;
+}
+
+/* Location Step */
+.locationStep {
+    text-align: center;
+    padding: 32px 0;
+}
+
+.locationIcon {
+    width: 80px;
+    height: 80px;
+    background-color: #EFF6FF;
+    color: #2563EB;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+}
+
+.stepTitle {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.stepDesc {
+    color: #6B7280;
+    margin-bottom: 32px;
+    max-width: 384px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.locationError {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #FEF2F2;
+    color: #DC2626;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.primaryButton {
+    background-color: #2563EB;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+    background-color: #1D4ED8;
+}
+
+.primaryButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Camera Step */
+.cameraStep {
+    text-align: center;
+}
+
+.cameraView {
+    position: relative;
+    max-width: 384px;
+    margin: 0 auto 24px auto;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+}
+
+.videoElement {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.capturedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.secondaryButton {
+    background-color: #F3F4F6;
+    color: #374151;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.secondaryButton:hover {
+    background-color: #E5E7EB;
+}
+
+.captureButton {
+    background-color: #2563EB;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.captureButton:hover {
+    background-color: #1D4ED8;
+}
+
+.submitButton {
+    background-color: #059669;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.submitButton:hover {
+    background-color: #047857;
+}
+
+/* Success Step */
+.successStep {
+    text-align: center;
+    padding: 32px 0;
+}
+
+.successIcon {
+    width: 80px;
+    height: 80px;
+    background-color: #ECFDF5;
+    color: #059669;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+}
+
+.timeText {
+    font-weight: 600;
+    color: #374151;
+}
+
+.darkButton {
+    background-color: #111827;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.darkButton:hover {
+    background-color: #1F2937;
+}
+
+.hidden {
+    display: none;
+}

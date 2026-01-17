@@ -19,7 +19,7 @@ const ProductionDashboard = () => {
     ];
 
     const appBarStyle = {
-        backgroundColor: theme.colors.global.primaryBlue,
+        backgroundColor: theme.colors.primaryBlue,
         color: 'white',
         padding: '16px',
         display: 'flex',
@@ -33,7 +33,7 @@ const ProductionDashboard = () => {
     };
 
     const pageContainer = {
-        backgroundColor: theme.colors.global.background,
+        backgroundColor: theme.colors.background,
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -80,7 +80,7 @@ const ProductionDashboard = () => {
                     labels={productionData.map(item => item.product)}
                     title="Daily Output by Product"
                     subtitle="Tons produced today"
-                    color={theme.colors.global.primaryBlue}
+                    color={theme.colors.primaryBlue}
                 />
             </div>
         </div>

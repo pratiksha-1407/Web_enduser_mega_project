@@ -1,261 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
     ArrowRight,
     BarChart3,
     Shield,
     Zap,
-    Globe,
-    Menu,
-    X
+    LayoutDashboard,
+    Package,
+    Truck
 } from 'lucide-react';
 import styles from './LandingPage.module.css';
 
 const LandingPage = () => {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     return (
-        <section className={styles.enterprise} id="enterprise">
-            <div className={styles.wrapper}>
-                {/* ================= NAVIGATION ================= */}
-                <nav
-                    className={`${styles.navbar} ${scrolled ? styles.scrolled : ''
-                        }`}
-                >
-                    <div className={styles.navContainer}>
-                        {/* Logo - Restored for structure, though likely wanted removed if user deleted it. 
-                        Actually, keeping Logo removed as per user's previous action, but fixing container. 
-                        Wait, layout needs a logo or empty spacing. I'll just restore container.
-                    */}
-
-                        {/* Desktop Status
-                    <div className={styles.desktopStats}>
-                        <div className={styles.statusIndicator}>
-                            <span className={styles.dot}></span>
-                            System Operational
+        <div className={styles.wrapper}>
+            {/* Header / Navbar */}
+            <nav className={styles.navbar}>
+                <div className={`${styles.container} ${styles.navContainer}`}>
+                    <Link to="/" className={styles.logo}>
+                        <div className={styles.logoIcon}>
+                            <LayoutDashboard size={24} />
                         </div>
-                    </div>
-                    */}
+                    </Link>
 
-                        {/* Navigation Links */}
-                        <div
-                            className={`${styles.navLinks} ${mobileMenuOpen ? styles.mobileOpen : ''
-                                }`}
-                        >
-                            <a
-                                href="#features"
-                                className={styles.navLink}
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                Platform
-                            </a>
-                            <a
-                                href="#enterprise"
-                                className={styles.navLink}
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                Enterprise
-                            </a>
+                    <Link to="/login" className={styles.loginBtn}>
+                        Log In
+                    </Link>
+                </div>
+            </nav>
 
-                            {/* Mobile-only login */}
-                            <Link
-                                to="/login"
-                                className={styles.loginBtnMobile}
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                Login Portal
-                            </Link>
-                        </div>
-
-                        {/* Desktop Login Button */}
-                        <Link to="/role" className={styles.loginBtn}>
+            {/* Hero Section */}
+            <header className={styles.hero}>
+                <div className={styles.container}>
+                    <div className={styles.heroContent}>
+                        <h1 className={styles.title}>
+                            Management System
+                        </h1>
+                        <p className={styles.subtitle}>
+                            A centralized platform for cattle feed operations. Track inventory,
+                            manage orders, and analyze production performance across all
+                            departments in real-time.
+                        </p>
+                        <Link to="/role" className={styles.primaryCta}>
                             Access Portal
+                            <ArrowRight size={18} />
                         </Link>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            className={styles.menuBtn}
-                            aria-label="Toggle navigation menu"
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        >
-                            {mobileMenuOpen ? <X /> : <Menu />}
-                        </button>
                     </div>
-                </nav>
+                </div>
+            </header>
 
-                {/* ================= HERO ================= */}
-                <header className={styles.hero}>
-                    <div className={styles.container}>
-                        <div className={styles.heroContent}>
-
-                            <h1 className={styles.title}>
-                                Multi-Role Smart{' '}
-                                <span className={styles.gradientText}>
-                                    Cattle Feed Management
-                                </span>{' '}
-                                System
-                            </h1>
-
-                            <p className={styles.subtitle}>
-                                A centralized enterprise dashboards for cattle feed Management System
-                                to track inventory, manage orders, and analyze
-                                production performance in real time.
-                            </p>
-
-                            <div className={styles.ctaGroup}>
-                                <Link to="/role" className={styles.primaryCta}>
-                                    Enter User Dashboard
-                                    <ArrowRight size={18} />
-                                </Link>
-
-                                {/*<button
-                                className={styles.secondaryCta}
-                                type="button"
-                            >
-                                View Documentation
-                            </button>*/}
-                            </div>
-
-                            <div className={styles.trustRow}>
-                                <div className={styles.trustItem}>
-                                    <strong>2.5k+</strong>
-                                    <span>Orders / Month</span>
-                                </div>
-
-                                <div className={styles.divider}></div>
-
-                                <div className={styles.trustItem}>
-                                    <strong>99.9%</strong>
-                                    <span>Uptime</span>
-                                </div>
-
-                                <div className={styles.divider}></div>
-
-                                <div className={styles.trustItem}>
-                                    <strong>Secure</strong>
-                                    <span>End-to-End</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Hero Visual */}
-                        <div className={styles.heroVisual}>
-                            <div className={styles.glassCard}>
-                                <div className={styles.cardHeader}>
-                                    <span
-                                        className={styles.cardDot}
-                                        style={{ background: '#ef4444' }}
-                                    ></span>
-                                    <span
-                                        className={styles.cardDot}
-                                        style={{ background: '#f59e0b' }}
-                                    ></span>
-                                    <span
-                                        className={styles.cardDot}
-                                        style={{ background: '#22c55e' }}
-                                    ></span>
-                                </div>
-
-                                <div className={styles.cardBody}>
-                                    <div className={styles.metricRow}>
-                                        <span className={styles.metricLabel}>
-                                            Production Output
-                                        </span>
-                                        <span className={styles.metricValue}>
-                                            +24.5%
-                                        </span>
-                                    </div>
-
-                                    <div className={styles.chartLine}></div>
-                                    <div
-                                        className={styles.chartLine}
-                                        style={{ width: '70%', marginTop: '8px' }}
-                                    ></div>
-
-                                    <div className={styles.miniStats}>
-                                        <div className={styles.miniStat}>
-                                            <Zap size={16} />
-                                            <span>Efficiency</span>
-                                        </div>
-                                        <div className={styles.miniStat}>
-                                            <BarChart3 size={16} />
-                                            <span>Analytics</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className={styles.glowEffect}></div>
-                        </div>
-                    </div>
-                </header>
-
-                {/* ================= FEATURES ================= */}
-                <section className={styles.features} id="features">
-                    <div className={styles.container}>
+            {/* Operational Focus / Features Section */}
+            <main className={styles.features}>
+                <div className={styles.container}>
+                    <div className={styles.featuresGrid}>
                         <div className={styles.featureCard}>
                             <div className={styles.iconBox}>
-                                <BarChart3 size={24} />
+                                <Package size={20} />
                             </div>
-                            <h3>Process Analytics</h3>
+                            <h3>Inventory Control</h3>
                             <p>
-                                Real-time monitoring and visualization of production
-                                metrics across all manufacturing units.
+                                Monitor raw material stocks and finished feed levels
+                                with precision tracking and low-stock alerts.
                             </p>
                         </div>
 
                         <div className={styles.featureCard}>
                             <div className={styles.iconBox}>
-                                <Shield size={24} />
+                                <Truck size={20} />
                             </div>
-                            <h3>Role-Based Access</h3>
+                            <h3>Order Management</h3>
                             <p>
-                                Secure, permission-based system ensuring controlled
-                                access for every employee role.
+                                Streamline the order process from placement to
+                                delivery, ensuring timely supply to all dealers.
                             </p>
                         </div>
 
                         <div className={styles.featureCard}>
                             <div className={styles.iconBox}>
-                                <Zap size={24} />
+                                <BarChart3 size={20} />
                             </div>
-                            <h3>Fast Dispatch</h3>
+                            <h3>Production Analysis</h3>
                             <p>
-                                Optimized order processing built for high-volume
-                                logistics and dispatch operations.
+                                Analyze daily output and efficiency metrics to
+                                optimize manufacturing processes and reduce waste.
+                            </p>
+                        </div>
+
+                        <div className={styles.featureCard}>
+                            <div className={styles.iconBox}>
+                                <Shield size={20} />
+                            </div>
+                            <h3>Secure Role Access</h3>
+                            <p>
+                                Role-based permissions for Owners, Managers,
+                                and Operations staff to ensure data integrity.
                             </p>
                         </div>
                     </div>
-                </section>
+                </div>
+            </main>
 
-                {/* ================= FOOTER ================= */}
-                <footer className={styles.footer}>
+            {/* Clean Footer */}
+            <footer className={styles.footer}>
+                <div className={styles.container}>
                     <div className={styles.footerContent}>
-                        <div className={styles.footerBrand}>
-                            <span className={styles.copyright}>
-                                © 2026
-                            </span>
-                        </div>
-
+                        <span className={styles.copyright}>
+                            © 2026 Management System. All rights reserved.
+                        </span>
                         <div className={styles.footerLinks}>
-                            <a href="#">Privacy</a>
-                            <a href="#">Terms</a>
-                            <a href="#">Status</a>
+                            <Link to="/login">Support</Link>
+                            <Link to="/login">Documentation</Link>
+                            <Link to="/login">Privacy Policy</Link>
                         </div>
                     </div>
-                </footer>
-            </div>
-        </section>
+                </div>
+            </footer>
+        </div>
     );
 };
 

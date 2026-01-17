@@ -42,7 +42,7 @@ const OwnerLayout = () => {
             {/* Sidebar */}
             <aside className={clsx(styles.sidebar, sidebarOpen && styles.open)}>
                 <div className={styles.brand}>
-                    <h2>Mega Feeds</h2>
+                    <h2>Owner</h2>
                     <button className={styles.closeBtn} onClick={toggleSidebar}>
                         <X size={24} />
                     </button>

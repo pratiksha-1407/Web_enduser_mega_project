@@ -39,8 +39,28 @@ export const employeeService = {
         const filePath = `${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('emp_profile_images') // Using emp_profile_images as per Flutter logical deduction
+            .from('emp_profile_images')
             .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('emp_profile_images')
+            .getPublicUrl(filePath);
+
+        return publicUrl;
+    },
+
+    async uploadAttendanceImage(blob) {
+        const fileName = `attendance_${Date.now()}.jpg`;
+        const filePath = `attendance/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('emp_profile_images')
+            .upload(filePath, blob, {
+                contentType: 'image/jpeg',
+                upsert: true
+            });
 
         if (uploadError) throw uploadError;
 
@@ -123,7 +143,6 @@ export const employeeService = {
     async checkTodayAttendance(empId) {
         const today = new Date().toISOString().split('T')[0];
 
-        // Fallback if empId not passed, try to get from user
         let userId = empId;
         if (!userId) {
             const { data: { user } } = await supabase.auth.getUser();
@@ -154,7 +173,7 @@ export const employeeService = {
             .from('emp_attendance')
             .insert({
                 employee_id: user.id,
-                employee_name: employeeName,
+                employee_name: employeeName || user.email,
                 date,
                 marked_time: time,
                 location,
@@ -166,21 +185,41 @@ export const employeeService = {
         return data;
     },
 
-    async getAttendanceHistory() {
+    async getAttendanceHistory(month = null) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return [];
 
-        const { data, error } = await supabase
+        let query = supabase
             .from('emp_attendance')
-            .select('date, marked_time, location, selfie_url')
+            .select('*') // Get all columns including potentially clock_out_time/status
             .eq('employee_id', user.id)
             .order('date', { ascending: false });
+
+        if (month && month !== 'all') {
+            // month format YYYY-MM
+            const startOfMonth = `${month}-01`;
+            // Calculate last day properly
+            const [y, m] = month.split('-');
+            const lastDay = new Date(y, m, 0).getDate();
+            const endOfMonth = `${month}-${lastDay}`;
+
+            query = query.gte('date', startOfMonth).lte('date', endOfMonth);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error("Error fetching attendance history", error);
             return [];
         }
-        return data;
+
+        // Map data to ensure consistency if columns missing
+        return data.map(record => ({
+            ...record,
+            status: record.status || 'Present', // Default status if column missing
+            clock_in: record.marked_time,       // Map marked_time to clock_in
+            clock_out: record.clock_out_time || record.clock_out || '-' // Check both
+        }));
     },
 
     // ==================== TARGETS ====================
@@ -210,7 +249,7 @@ export const employeeService = {
             }
         });
 
-        // Fetch Achieved (from cattle_feed_orders as per Flutter repo)
+        // Fetch Achieved
         const { data: achievedData, error: achievedError } = await supabase
             .from('cattle_feed_orders')
             .select('*')

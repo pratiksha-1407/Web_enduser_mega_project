@@ -1,103 +1,161 @@
 .dashboard {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 24px;
 }
 
+/* Loading & Error States */
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 256px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #E5E7EB;
+    border-bottom-color: #2563EB;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.errorContainer {
+    padding: 32px;
+    text-align: center;
+    color: #EF4444;
+    background-color: #FEF2F2;
+    border-radius: 8px;
+}
+
+.retryButton {
+    margin-top: 16px;
+    background: none;
+    border: none;
+    color: #2563EB;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Welcome Section */
 .welcomeSection {
     margin-bottom: 8px;
 }
 
 .welcomeSection h1 {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1a202c;
-    letter-spacing: -0.5px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .welcomeSection p {
-    color: #64748b;
-    font-size: 16px;
+    color: #6B7280;
+    font-size: 14px;
     margin-top: 4px;
 }
 
+/* Attendance Card */
 .attendanceCard {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    padding: 24px 32px;
-    border-radius: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
+    border-left: 4px solid #F59E0B;
+    /* Warning/Pending Color */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid #e2e8f0;
-    position: relative;
-    overflow: hidden;
 }
 
 .attendanceCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .attendanceMarked {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border-color: #bbf7d0;
+    border-left-color: #10B981;
+    /* Success Green */
+}
+
+.attendanceContent {
+    flex: 1;
 }
 
 .attendanceIcon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: #eff6ff;
-    color: #007bff;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #FFFBEB;
+    /* Light Amber */
+    color: #F59E0B;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 123, 255, 0.1);
 }
 
 .attendanceMarked .attendanceIcon {
-    background: #22c55e;
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+    background-color: #ECFDF5;
+    color: #10B981;
 }
 
+.cardTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.cardSub {
+    font-size: 13px;
+    color: #6B7280;
+    margin: 2px 0 0 0;
+}
+
+.actionArrow {
+    margin-left: auto;
+    color: #9CA3AF;
+    transition: color 0.2s;
+}
+
+.attendanceCard:hover .actionArrow {
+    color: #2563EB;
+}
+
+/* Grid Layout for Stats */
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-}
-
-@media (max-width: 1024px) {
-    .statsGrid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
 }
 
 .statCard {
-    background: white;
-    padding: 24px;
-    border-radius: 20px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    border: 1px solid #E5E7EB;
     transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
 }
 
 .statCard:hover {
-    border-color: #3b82f6;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #BFDBFE;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    /* Blue glow */
 }
 
 .statHeader {
@@ -108,92 +166,163 @@
 }
 
 .statIconWrapper {
-    padding: 10px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #F3F4F6;
+    color: #6B7280;
 }
 
 .iconBlue {
-    background-color: #eff6ff;
-    color: #2563eb;
+    background-color: #EFF6FF;
+    color: #2563EB;
 }
 
 .iconOrange {
-    background-color: #fff7ed;
-    color: #ea580c;
+    background-color: #FFF7ED;
+    color: #EA580C;
 }
 
 .iconGreen {
-    background-color: #f0fdf4;
-    color: #16a34a;
+    background-color: #ECFDF5;
+    color: #059669;
 }
 
 .statValue {
-    font-size: 36px;
-    font-weight: 800;
-    color: #1e293b;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
     line-height: 1;
-    margin-bottom: 4px;
+    margin: 0 0 4px 0;
 }
 
 .statLabel {
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.chartContainer {
-    background: white;
-    padding: 32px;
-    border-radius: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-    border: 1px solid #f1f5f9;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B7280;
+    margin: 0;
 }
 
 .sectionTitle {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.monthStats {
+.emptyIcon {
+    color: #9CA3AF;
+}
+
+/* Chart Section */
+.chartContainer {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E5E7EB;
+}
+
+.chartHeader {
     display: flex;
     justify-content: space-between;
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 16px;
+    align-items: center;
     margin-bottom: 24px;
-    border: 1px solid #f1f5f9;
+}
+
+.chartSelect {
+    background-color: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 4px 8px;
+    color: #4B5563;
+    outline: none;
+}
+
+.chartSelect:focus {
+    border-color: #2563EB;
+}
+
+.monthStats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F3F4F6;
 }
 
 .monthStatItem {
-    text-align: center;
-    flex: 1;
-    border-right: 1px solid #cbd5e1;
-}
-
-.monthStatItem:last-child {
-    border-right: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .monthStatValue {
-    font-weight: 800;
-    color: #1e293b;
     font-size: 20px;
-    margin-bottom: 4px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.monthStatValueSuccess {
+    color: #10B981;
+}
+
+.monthStatValuePrimary {
+    color: #2563EB;
+}
+
+.monthStatValueWarning {
+    color: #F59E0B;
 }
 
 .monthStatLabel {
     font-size: 12px;
-    color: #64748b;
-    font-weight: 600;
+    font-weight: 500;
+    color: #6B7280;
     text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.chartWrapper {
+    height: 300px;
+    width: 100%;
+}
+
+.emptyChart {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    color: #9CA3AF;
+}
+
+.emptyChartIcon {
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.emptyChartText {
+    font-size: 14px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 640px) {
+    .monthStats {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .monthStatValue {
+        font-size: 16px;
+    }
 }

@@ -61,7 +61,7 @@ const MarketingLayout = () => {
                 <div className={styles.sidebarHeader}>
                     <div className={styles.logo}>
                         <div className={styles.logoIcon}>M</div>
-                        {!isSidebarOpen ? null : <span>Mega Marketing</span>}
+                        {!isSidebarOpen ? null : <span>Marketing</span>}
                     </div>
                 </div>
 

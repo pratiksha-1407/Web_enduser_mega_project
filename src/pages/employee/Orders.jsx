@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { employeeService } from '../../services/employeeService';
 import styles from '../../styles/employee/tables.module.css';
-import { Search, ShoppingBag, Eye, RefreshCw } from 'lucide-react';
+import { Search, ShoppingBag, RefreshCw } from 'lucide-react';
 
 const Orders = () => {
     const { status } = useParams(); // 'total', 'pending', 'completed'
@@ -56,10 +56,10 @@ const Orders = () => {
     const getStatusStyle = (status) => {
         const s = status?.toLowerCase() || '';
         if (s.includes('pending')) return styles.statusPending;
-        if (s.includes('complete') || s.includes('deliver')) return styles.statusCompleted;
+        if (s.includes('complete') || s.includes('deliver')) return styles.statusSuccess;
         if (s.includes('cancel')) return styles.statusCancelled;
         if (s.includes('pack')) return styles.statusPacking;
-        if (s.includes('ready')) return styles.statusReady;
+        if (s.includes('ready') || s.includes('dispatch')) return styles.statusReady;
         return styles.statusPending; // Default
     };
 
@@ -68,15 +68,15 @@ const Orders = () => {
     return (
         <div className={styles.tableContainer}>
             <div className={styles.tableHeader}>
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                <div className={styles.titleGroup}>
+                    <div className={styles.iconWrapper}>
                         <ShoppingBag size={20} />
                     </div>
                     <h2 className={styles.tableTitle}>
                         {status ? status.charAt(0).toUpperCase() + status.slice(1) : 'All'} Orders
                     </h2>
-                    <button onClick={fetchOrders} className="p-2 ml-2 hover:bg-gray-100 rounded-full transition-colors" title="Refresh">
-                        <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+                    <button onClick={fetchOrders} className={styles.refreshBtn} title="Refresh">
+                        <RefreshCw size={16} className={loading ? styles.spinning : ''} />
                     </button>
                 </div>
                 <div className={styles.searchBox}>
@@ -101,45 +101,42 @@ const Orders = () => {
                             <th>Prod / Qty</th>
                             <th>Amount</th>
                             <th>Status</th>
-                            {/* <th>Actions</th> */}
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="6" className="text-center py-8 text-gray-500">
+                                <td colSpan="6" className={styles.centerMessage}>
+                                    <div className="flex justify-center mb-2">
+                                        <div className={styles.loadingSpinner}></div>
+                                    </div>
                                     Loading orders...
                                 </td>
                             </tr>
                         ) : filteredOrders.length > 0 ? (
                             filteredOrders.map((order) => (
                                 <tr key={order.id}>
-                                    <td className="font-mono text-xs font-semibold">{order.display_id}</td>
+                                    <td className={styles.monoText}>{order.display_id}</td>
                                     <td>{new Date(order.created_at).toLocaleDateString()}</td>
                                     <td>
-                                        <div className="font-medium text-gray-900">{order.customer_name}</div>
-                                        <div className="text-xs text-gray-500">{order.customer_mobile}</div>
+                                        <div className={styles.primaryText}>{order.customer_name}</div>
+                                        <div className={styles.secondaryText}>{order.customer_mobile}</div>
                                     </td>
                                     <td>
-                                        <div className="text-sm text-gray-900">{order.feed_category}</div>
-                                        <div className="text-xs text-gray-500">{order.bags} Bags</div>
+                                        <div className={styles.primaryText}>{order.feed_category}</div>
+                                        <div className={styles.secondaryText}>{order.bags} Bags</div>
                                     </td>
-                                    <td className="font-medium">₹{order.total_price}</td>
+                                    <td className={styles.primaryText}>₹{order.total_price}</td>
                                     <td>
-                                        <span className={`${styles.statusBadge} ${getStatusStyle(order.status)}`}>
+                                        <span className={`${styles.statusPill} ${getStatusStyle(order.status)}`}>
                                             {order.status?.replace(/_/g, ' ').toUpperCase()}
                                         </span>
                                     </td>
-                                    {/* <td>
-                                        <button className={styles.actionBtn}>
-                                            <Eye size={18} />
-                                        </button>
-                                    </td> */}
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" className="text-center py-8 text-gray-500">
+                                <td colSpan="6" className={styles.centerMessage}>
                                     No orders found
                                 </td>
                             </tr>

@@ -33,7 +33,7 @@ const OwnerProfile = () => {
                     </div>
                     <div className={styles.nameSection}>
                         <h1>{profile.full_name}</h1>
-                        <p>Managing Director • Mega Feeds</p>
+                        <p>Managing Director</p>
                         <span className={styles.statusBadge}>Owner Account</span>
                     </div>
                 </div>
@@ -86,7 +86,7 @@ const OwnerProfile = () => {
                             <div className={styles.iconBox}><Home size={18} /></div>
                             <div>
                                 <p className={styles.itemLabel}>Company Name</p>
-                                <p className={styles.itemValue}>Mega Feeds Manufacturing Pvt Ltd</p>
+                                <p className={styles.itemValue}>Manufacturing Pvt Ltd</p>
                             </div>
                         </div>
                         <div className={styles.infoItem}>

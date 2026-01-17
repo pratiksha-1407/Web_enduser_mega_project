@@ -33,7 +33,7 @@ const MarketingDashboard = () => {
   };
 
   const appBarStyle = {
-    backgroundColor: theme.colors.global.primaryBlue,
+    backgroundColor: theme.colors.primaryBlue,
     color: 'white',
     padding: '16px',
     display: 'flex',
@@ -47,16 +47,16 @@ const MarketingDashboard = () => {
   };
 
   const pageContainer = {
-    backgroundColor: theme.colors.background.scaffold,
+    backgroundColor: theme.colors.scaffoldBg,
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
   };
 
   const cardStyle = {
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: '14px',
-    boxShadow: `0 6px 12px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 6px 12px ${theme.colors.shadowGrey}`,
     padding: '16px',
     marginBottom: '16px',
   };
@@ -80,14 +80,14 @@ const MarketingDashboard = () => {
 
   const sectionSubHeaderStyle = {
     ...typography.bodyRegular,
-    color: theme.colors.global.textGrey,
+    color: theme.colors.textGrey,
     marginBottom: '20px',
   };
 
   const actionButtonStyle = {
     height: '48px',
-    backgroundColor: theme.colors.global.primaryBlue,
-    color: theme.colors.global.white,
+    backgroundColor: theme.colors.primaryBlue,
+    color: theme.colors.white,
     border: 'none',
     borderRadius: '8px',
     padding: '0 18px',
@@ -111,9 +111,9 @@ const MarketingDashboard = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.colors.global.white,
+    backgroundColor: theme.colors.white,
     borderRadius: '16px',
-    boxShadow: `0 6px 14px ${theme.colors.shadows.grey}`,
+    boxShadow: `0 6px 14px ${theme.colors.shadowGrey}`,
     padding: '16px',
     overflow: 'hidden',
   };
@@ -149,7 +149,7 @@ const MarketingDashboard = () => {
           labels={data[selectedDistrict]?.map(item => item.taluka)}
           title="Taluka-wise Sales Trend"
           subtitle="Reported sales volume"
-          color={theme.colors.global.primaryBlue}
+          color={theme.colors.primaryBlue}
         />
 
         {/* Action Buttons */}

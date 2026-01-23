@@ -306,6 +306,11 @@ export const ownerService = {
                 this.getRevenueChartData()
             ]);
 
+            // Mock Cost Data (Since we don't have a direct cost table yet)
+            const totalRawMaterialCost = Math.round(totalRevenue * 0.6); // 60% of revenue
+            const totalProfit = totalRevenue - totalRawMaterialCost;
+            const profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+
             return {
                 totalRevenue,
                 totalOrders,
@@ -314,9 +319,24 @@ export const ownerService = {
                 topProducts,
                 recentActivities,
                 revenueChartData,
-                revenueGrowth: 12.5, // Mocked as per Flutter source
+                revenueGrowth: 12.5,
                 orderGrowth: 8.2,
-                employeeGrowth: 3.5
+                employeeGrowth: 3.5,
+                // Profit & Cost Data
+                totalRawMaterialCost,
+                totalProfit,
+                profitMargin,
+                // Material Breakdown Mock
+                materialCostBreakdown: {
+                    'Maize': totalRawMaterialCost * 0.4,
+                    'Soybean': totalRawMaterialCost * 0.3,
+                    'Mineral Mix': totalRawMaterialCost * 0.3
+                },
+                // Production Stats Mock (Tons)
+                productionToday: 45.2,
+                productionTarget: 50.0,
+                dispatchedToday: 40.5,
+                ordersToDispatch: 42.0
             };
         } catch (error) {
             console.error('getDashboardData error:', error);

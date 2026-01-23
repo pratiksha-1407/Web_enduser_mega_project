@@ -17,6 +17,7 @@ import EmployeeDashboard from './pages/employee/Dashboard';
 import CreateOrder from './pages/employee/CreateOrder';
 import Inventory from './pages/employee/Inventory';
 import Orders from './pages/employee/Orders';
+import TrackOrder from './pages/employee/TrackOrder';
 import AttendanceMark from './pages/employee/AttendanceMark';
 import AttendanceHistory from './pages/employee/AttendanceHistory';
 import Profile from './pages/employee/Profile';
@@ -63,6 +64,7 @@ function App() {
             {/* Orders routes */}
             <Route path="orders" element={<Navigate to="total" replace />} />
             <Route path="orders/:status" element={<Orders />} />
+            <Route path="orders/track/:orderId" element={<TrackOrder />} />
 
             {/* Attendance routes */}
             <Route path="attendance" element={<Navigate to="mark" replace />} />

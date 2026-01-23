@@ -1,121 +1,226 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { Package, Search, Scale, IndianRupee, RefreshCw, AlertTriangle, CheckCircle, Box } from 'lucide-react';
+import { employeeService } from '../../services/employeeService';
+import styles from '../../styles/employee/inventory.module.css';
 
-import React, { useState, useEffect } from 'react';
-import { Package, Search, Filter, AlertTriangle } from 'lucide-react';
-import styles from '../../styles/employee/tables.module.css';
-
-// Mock inventory data service (replace with actual API later if needed)
-// Assuming for now stock data is fetched or mocked similar to other modules
 const Inventory = () => {
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showMarathi, setShowMarathi] = useState(false);
+
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const data = await employeeService.getInventoryProducts();
+            if (data) {
+                setInventory(data);
+            }
+        } catch (error) {
+            console.error("Failed to load inventory", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        // Simulate API fetch
-        const loadInventory = async () => {
-            setLoading(true);
-            try {
-                // Mock data based on Flutter "Stock" or similar availability
-                // Since user didn't explicitly ask for backend integration for this yet, 
-                // we'll provide a UI with mock data or empty state consistent with the new design.
-                await new Promise(r => setTimeout(r, 800));
-                setInventory([
-                    { id: 1, name: 'Cattle Feed A', category: 'Premium', stock: 120, unit: 'Bags', price: 1200, status: 'In Stock' },
-                    { id: 2, name: 'Cattle Feed B', category: 'Standard', stock: 45, unit: 'Bags', price: 950, status: 'Low Stock' },
-                    { id: 3, name: 'Mineral Mixture', category: 'Supplements', stock: 200, unit: 'Kg', price: 450, status: 'In Stock' },
-                    { id: 4, name: 'Calf Starter', category: 'Starter', stock: 0, unit: 'Bags', price: 1400, status: 'Out of Stock' },
-                ]);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadInventory();
+        loadData();
     }, []);
 
-    const filteredInventory = inventory.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Calculate derived values and filter
+    const filteredInventory = useMemo(() => {
+        return inventory.filter(item => {
+            const name = (item.name || '').toLowerCase();
+            const category = (item.category || '').toLowerCase();
+            const search = searchTerm.toLowerCase();
+            return name.includes(search) || category.includes(search);
+        });
+    }, [inventory, searchTerm]);
 
-    const getStatusBadge = (status) => {
-        if (status === 'In Stock') return styles.statusSuccess;
-        if (status === 'Low Stock') return styles.statusPending; // Orange/Warning
-        return styles.statusError; // Red/Out of Stock
+    const totals = useMemo(() => {
+        return inventory.reduce((acc, item) => {
+            const bags = item.bags || 0;
+            // Fallback for weight: use column or default to 50kg
+            const weightPerBag = item.weight_per_bag || 50;
+            // Fallback for price: use column or default to 0
+            const pricePerBag = item.price_per_bag || 0;
+
+            acc.bags += bags;
+            acc.tons += (bags * weightPerBag) / 1000;
+            acc.value += (bags * pricePerBag);
+            return acc;
+        }, { bags: 0, tons: 0, value: 0 });
+    }, [inventory]);
+
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(amount);
+    };
+
+    const getStatusColor = (bags) => {
+        if (bags <= 0) return styles.statusCritical;
+        if (bags < 50) return styles.statusLow; // Example threshold
+        return styles.statusOptimal;
+    };
+
+    const getStatusText = (bags) => {
+        if (bags <= 0) return "Out of Stock";
+        if (bags < 50) return "Low Stock";
+        return "In Stock";
     };
 
     return (
-        <div className="space-y-6">
-            <div className={styles.tableContainer}>
-                <div className={styles.tableHeader}>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+        <div className={styles.container}>
+            {/* Header */}
+            <div className={styles.header}>
+                <h1 className={styles.title}>Inventory Management</h1>
+                <button
+                    className={styles.refreshButton}
+                    onClick={loadData}
+                    disabled={loading}
+                >
+                    <RefreshCw size={16} className={loading ? styles.spin : ''} />
+                    {loading ? 'Refreshing...' : 'Refresh Data'}
+                </button>
+            </div>
+
+            {/* Summary Cards */}
+            <div className={styles.summaryGrid}>
+                {/* Total Bags */}
+                <div className={styles.summaryCard}>
+                    <div className={styles.summaryHeader}>
+                        <div>
+                            <span className={styles.summaryLabel}>Total Bags</span>
+                            <div className={styles.summaryValue}>{totals.bags.toLocaleString()}</div>
+                        </div>
+                        <div className={`${styles.summaryIconBox} ${styles.blueIcon}`}>
                             <Package size={20} />
                         </div>
-                        <h2 className={styles.tableTitle}>Current Inventory</h2>
-                    </div>
-                    <div className={styles.searchBox}>
-                        <Search size={18} className="text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search products..."
-                            className={styles.searchInput}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
                     </div>
                 </div>
 
-                <div className={styles.tableWrapper}>
-                    <table className={styles.dataTable}>
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Category</th>
-                                <th>Stock Level</th>
-                                <th>Unit Price</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr>
-                                    <td colSpan="5" className="text-center py-12 text-gray-500">
-                                        <div className="flex justify-center mb-2">
-                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                                        </div>
-                                        Loading inventory...
-                                    </td>
-                                </tr>
-                            ) : filteredInventory.length > 0 ? (
-                                filteredInventory.map((item) => (
-                                    <tr key={item.id}>
-                                        <td className="font-medium text-gray-900">{item.name}</td>
-                                        <td className="text-gray-500">{item.category}</td>
-                                        <td>
-                                            <div className="font-medium">
-                                                {item.stock} <span className="text-xs text-gray-400 font-normal">{item.unit}</span>
-                                            </div>
-                                        </td>
-                                        <td>₹{item.price}</td>
-                                        <td>
-                                            <span className={`${styles.statusPill} ${getStatusBadge(item.status)}`}>
-                                                {item.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="5" className="text-center py-12 text-gray-500">
-                                        No products found.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                {/* Total Tons */}
+                <div className={styles.summaryCard}>
+                    <div className={styles.summaryHeader}>
+                        <div>
+                            <span className={styles.summaryLabel}>Total Tons</span>
+                            <div className={styles.summaryValue}>{totals.tons.toFixed(2)} T</div>
+                        </div>
+                        <div className={`${styles.summaryIconBox} ${styles.greenIcon}`}>
+                            <Scale size={20} />
+                        </div>
+                    </div>
                 </div>
+
+                {/* Total Value */}
+                <div className={styles.summaryCard}>
+                    <div className={styles.summaryHeader}>
+                        <div>
+                            <span className={styles.summaryLabel}>Total Value</span>
+                            <div className={styles.summaryValue}>{formatCurrency(totals.value)}</div>
+                        </div>
+                        <div className={`${styles.summaryIconBox} ${styles.orangeIcon}`}>
+                            <IndianRupee size={20} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Controls */}
+            <div className={styles.controls}>
+                <div className={styles.searchContainer}>
+                    <Search className={styles.searchIcon} />
+                    <input
+                        type="text"
+                        placeholder="Search products or categories..."
+                        className={styles.searchInput}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                {/* Visual Toggle for Language - Functionality depends on data */}
+                <div className={styles.toggleContainer}>
+                    <span
+                        className={styles.toggleLabel}
+                        style={{ fontWeight: !showMarathi ? '700' : '400', color: !showMarathi ? '#2563eb' : '#6b7280', cursor: 'pointer' }}
+                        onClick={() => setShowMarathi(false)}
+                    >
+                        English
+                    </span>
+                    <div
+                        style={{ width: '1px', height: '12px', background: '#ccc' }}
+                    />
+                    <span
+                        className={styles.toggleLabel}
+                        style={{ fontWeight: showMarathi ? '700' : '400', color: showMarathi ? '#2563eb' : '#6b7280', cursor: 'pointer' }}
+                        onClick={() => setShowMarathi(true)}
+                    >
+                        मराठी
+                    </span>
+                </div>
+            </div>
+
+            {/* Inventory List */}
+            <div className={styles.grid}>
+                {filteredInventory.map((item) => {
+                    const statusClass = getStatusColor(item.bags || 0);
+                    const displayName = showMarathi ? (item.name_hindi || item.name) : item.name;
+
+                    return (
+                        <div key={item.id} className={styles.card}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.itemInfo}>
+                                    <h3 className={styles.itemName}>{displayName}</h3>
+                                    <span className={styles.categoryPill}>{item.category || 'General'}</span>
+                                </div>
+                                <div className={`${styles.statusPill} ${statusClass}`}>
+                                    {(item.bags || 0) < 50 ? <AlertTriangle size={12} /> : <CheckCircle size={12} />}
+                                    {getStatusText(item.bags || 0)}
+                                </div>
+                            </div>
+
+                            <div className={styles.cardBody}>
+                                <div className={styles.metricRow}>
+                                    <div className={styles.metric}>
+                                        <span className={styles.metricLabel}>Available Stock</span>
+                                        <span className={styles.metricValue}>
+                                            <Package size={12} style={{ display: 'inline', marginRight: 4 }} />
+                                            {item.bags || 0} Bags
+                                        </span>
+                                    </div>
+                                    <div className={styles.metric}>
+                                        <span className={styles.metricLabel}>Total Weight</span>
+                                        <span className={styles.metricValue}>
+                                            {((item.bags || 0) * (item.weight_per_bag || 50) / 1000).toFixed(2)} T
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className={styles.metricRow}>
+                                    <div className={styles.metric}>
+                                        <span className={styles.metricLabel}>Weight / Bag</span>
+                                        <span className={styles.metricValue}>{item.weight_per_bag || 50} kg</span>
+                                    </div>
+                                    <div className={styles.metric}>
+                                        <span className={styles.metricLabel}>Price / Bag</span>
+                                        <span className={styles.metricValue}>{formatCurrency(item.price_per_bag || 0)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+
+                {!loading && filteredInventory.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <Box size={48} style={{ margin: '0 auto 16px', color: '#d1d5db' }} />
+                        <p>No inventory items found matching your search.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

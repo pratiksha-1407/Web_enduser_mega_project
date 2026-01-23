@@ -72,6 +72,17 @@ export const employeeService = {
     },
 
     // ==================== ORDERS ====================
+    async getOrderDetails(orderId) {
+        if (!orderId) throw new Error("Order ID is required");
+        const { data, error } = await supabase
+            .from('emp_mar_orders')
+            .select('*')
+            .eq('id', orderId)
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
     async getOrders() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return [];
@@ -249,11 +260,12 @@ export const employeeService = {
             }
         });
 
-        // Fetch Achieved
+        // Fetch Achieved from emp_mar_orders
         const { data: achievedData, error: achievedError } = await supabase
-            .from('cattle_feed_orders')
-            .select('*')
-            .eq('emp_id', empId)
+            .from('emp_mar_orders')
+            .select('bags, created_at')
+            .eq('employee_id', empId)
+            .eq('status', 'completed')
             .gte('created_at', `${currentYear}-01-01T00:00:00`)
             .lte('created_at', `${currentYear}-12-31T23:59:59`);
 
@@ -265,23 +277,13 @@ export const employeeService = {
         months.forEach(m => achievedMap[m] = 0);
 
         achievedData?.forEach(order => {
-            const status = (order.order_status || order.status || '').toLowerCase();
-            const isCompleted = status.includes('complete') || status.includes('deliver') || status.includes('confirm');
-
-            if (!isCompleted || !order.created_at) return;
+            if (!order.created_at) return;
 
             const date = new Date(order.created_at);
+            // Format month as YYYY-MM
             const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
-            let quantity = 0;
-            const quantityFields = ['tons', 'quantity', 'bags', 'order_quantity', 'qty', 'weight', 'total_quantity'];
-
-            for (const field of quantityFields) {
-                if (order[field] !== undefined && order[field] !== null) {
-                    quantity = parseFloat(order[field]) || 0;
-                    if (quantity > 0) break;
-                }
-            }
+            const quantity = parseFloat(order.bags) || 0;
 
             if (quantity > 0 && achievedMap.hasOwnProperty(monthKey)) {
                 achievedMap[monthKey] += quantity;
@@ -293,5 +295,22 @@ export const employeeService = {
             achieved: months.map(m => achievedMap[m]),
             months: months
         };
+    },
+
+    // ==================== INVENTORY ====================
+    async getInventoryProducts() {
+        // Fetch products from production_products table
+        // We filter by valid items only
+        const { data, error } = await supabase
+            .from('production_products')
+            .select('*')
+            // .eq('is_active', true) // Uncomment if is_active column exists, utilizing safety for now
+            .order('name');
+
+        if (error) {
+            console.error('Error fetching inventory:', error);
+            return [];
+        }
+        return data;
     }
 };

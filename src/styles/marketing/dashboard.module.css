@@ -1,314 +1,343 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+    animation: fadeIn 0.5s ease-out;
 }
 
-.loadingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    color: #64748b;
-}
-
-.loader {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #3b82f6;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.statsGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.statCard {
+/* Welcome Section */
+.welcomeCard {
     background: white;
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+}
+
+.welcomeText h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+}
+
+.welcomeText p {
+    font-size: 14px;
+    color: #6b7280;
+    display: flex;
     align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    gap: 6px;
+    margin: 0;
+}
+
+.districtBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #f3f4f6;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+/* Total Sales Card */
+.salesCard {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+    margin-bottom: 24px;
     position: relative;
     overflow: hidden;
 }
 
-.blueGradient {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: white;
-}
-
-.blueGradient .statLabel {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.statContent {
+.salesHeader {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 1;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
 }
 
-.statLabel {
+.salesSub {
     font-size: 14px;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
 }
 
-.statValue {
-    font-size: 28px;
+.salesValue {
+    font-size: 32px;
     font-weight: 700;
-    margin: 0;
+    margin: 8px 0;
+    line-height: 1.2;
 }
 
-.statSubText {
-    font-size: 12px;
-    color: #94a3b8;
-}
-
-.blueGradient .statSubText {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.statIcon {
-    opacity: 0.2;
-}
-
-/* Circular Progress */
-.progressRing {
-    position: relative;
-    width: 70px;
-    height: 70px;
+.salesIcon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(4px);
 }
 
-.circularChart {
-    width: 100%;
-    height: 100%;
+.liveIndicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.circleBg {
-    fill: none;
-    stroke: #f1f5f9;
-    stroke-width: 3;
+.blinkDot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
 }
 
-.circle {
-    fill: none;
-    stroke: #2563eb;
-    stroke-width: 3;
-    stroke-linecap: round;
-    transition: stroke-dasharray 0.3s ease;
+@keyframes blink {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-.percentage {
-    position: absolute;
-    font-size: 14px;
-    font-weight: 700;
-    color: #2563eb;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.mainGrid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-}
-
-.chartCard,
-.targetCard {
+/* Chart Section */
+.chartCard {
     background: white;
     border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
 }
 
 .cardHeader {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-}
-
-.headerInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .cardTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
     margin: 0;
 }
 
-.chartSubtitle {
-    font-size: 11px;
-    color: #94a3b8;
-    font-style: italic;
-}
-
-.locationBadge,
-.monthBadge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background-color: #eff6ff;
-    color: #2563eb;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.chartWrapper {
+.chartContainer {
+    height: 300px;
     width: 100%;
-    overflow-x: auto;
-    padding-bottom: 10px;
 }
 
-/* Target Card Styles */
-.noTarget {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0;
-    text-align: center;
+/* Grid Layout */
+.grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
-.warnIcon {
-    color: #f59e0b;
-    margin-bottom: 16px;
+@media (max-width: 768px) {
+    .grid2 {
+        grid-template-columns: 1fr;
+    }
 }
 
-.noTarget h4 {
-    margin: 0 0 8px;
-    color: #1e293b;
-}
-
-.noTarget p {
-    font-size: 13px;
-    color: #64748b;
-    margin: 0;
-}
-
-.targetMetrics {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.metricItem {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.metricLabel {
-    font-size: 13px;
-    font-weight: 600;
-    color: #64748b;
-}
-
-.metricValues {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-}
-
-.current {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.goal {
-    font-size: 12px;
-    color: #94a3b8;
+/* Stats Cards */
+.targetSection,
+.metricCard {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: 100%;
 }
 
 .progressBar {
     height: 8px;
-    background-color: #f1f5f9;
+    background-color: #f3f4f6;
     border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progressFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease-out;
+}
+
+/* Top Performers */
+.topPerformerList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.performerItem {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: white;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    gap: 12px;
+}
+
+.rankBadge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.rank1 {
+    background-color: #b45309;
+    box-shadow: 0 2px 4px rgba(180, 83, 9, 0.3);
+}
+
+/* Gold/Amber */
+.rank2 {
+    background-color: #6b7280;
+    box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+}
+
+/* Silver/Grey */
+.rank3 {
+    background-color: #c2410c;
+    box-shadow: 0 2px 4px rgba(194, 65, 12, 0.3);
+}
+
+/* Bronze/Orange */
+.rankBadge:not(.rank1):not(.rank2):not(.rank3) {
+    background-color: #3b82f6;
+}
+
+.performerInfo {
+    flex: 1;
     overflow: hidden;
 }
 
-.progress {
-    height: 100%;
-    background-color: #2563eb;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
-
-.green {
-    background-color: #10b981;
-}
-
-.remarksBox {
-    margin-top: 24px;
-    padding: 16px;
-    background-color: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #f1f5f9;
-}
-
-.remarksTitle {
-    font-size: 12px;
-    font-weight: 700;
-    color: #64748b;
-    margin: 0 0 6px;
-    text-transform: uppercase;
-}
-
-.remarksBox p {
-    font-size: 13px;
-    color: #334155;
+.performerName {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
     margin: 0;
-    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.lastUpdated {
-    margin-top: 20px;
-    text-align: right;
+.performerStats {
     font-size: 11px;
-    color: #94a3b8;
-    font-style: italic;
+    color: #6b7280;
+    margin: 2px 0 0;
 }
 
-@media (max-width: 1280px) {
-    .statsGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .mainGrid {
-        grid-template-columns: 1fr;
-    }
+.performerScore {
+    background-color: #ecfdf5;
+    color: #059669;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
 }
 
-@media (max-width: 768px) {
-    .statsGrid {
-        grid-template-columns: 1fr;
-    }
+/* Action Buttons */
+.actionRow {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.refreshBtn {
+    flex: 1;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.refreshBtn:hover {
+    background-color: #059669;
+}
+
+.manageBtn {
+    flex: 1;
+    background-color: transparent;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.manageBtn:hover {
+    background-color: #eff6ff;
+}
+
+/* Info Card */
+.infoCard {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
 }

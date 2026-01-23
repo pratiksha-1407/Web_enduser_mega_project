@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { marketingService } from '../../services/marketingService';
-import { supabase } from '../../services/supabaseClient';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/marketing/dashboard.module.css';
 import {
     TrendingUp,
+    Users,
     ShoppingCart,
-    DollarSign,
-    Calendar,
+    Target,
     MapPin,
+    RefreshCw,
+    UserPlus,
+    Activity,
     AlertCircle,
-    CheckCircle2
+    Info
 } from 'lucide-react';
 import {
     LineChart,
@@ -19,167 +22,154 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    AreaChart,
-    Area
+    Area,
+    AreaChart
 } from 'recharts';
+import clsx from 'clsx';
 
 const MarketingDashboard = () => {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
-    const [managerProfile, setManagerProfile] = useState(null);
-    const [target, setTarget] = useState(null);
-    const [selectedDistrict, setSelectedDistrict] = useState('Kolhapur');
-
-    // Mock taluka data from Flutter app
-    const talukaData = [
-        { taluka: "Karvir", sales: 220, target: 250 },
-        { taluka: "Panhala", sales: 160, target: 180 },
-        { taluka: "Shirol", sales: 140, target: 150 },
-        { taluka: "Hatkanangale", sales: 110, target: 120 },
-        { taluka: "Kagal", sales: 180, target: 200 },
-        { taluka: "Shahuwadi", sales: 95, target: 100 },
-        { taluka: "Ajara", sales: 75, target: 90 },
-        { taluka: "Gadhinglaj", sales: 205, target: 220 },
-        { taluka: "Chandgad", sales: 130, target: 140 },
-        { taluka: "Radhanagari", sales: 120, target: 130 },
-        { taluka: "Jat", sales: 90, target: 100 },
-        { taluka: "Bhudargad", sales: 150, target: 160 },
-    ];
+    const [dashboardData, setDashboardData] = useState({
+        managerName: '',
+        district: '',
+        salesData: { totalSales: 0, chartData: [] },
+        targets: null,
+        teamPerformance: null
+    });
 
     useEffect(() => {
-        initDashboard();
-    }, []);
+        if (user) {
+            fetchDashboardData();
+        }
+    }, [user]);
 
-    const initDashboard = async () => {
+    const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
 
-            // 1. Get Manager Profile
+            // 1. Get Profile
             const profile = await marketingService.getProfile(user.id);
-            setManagerProfile(profile);
+            if (!profile) throw new Error('Profile not found');
 
-            // 2. Get Manager Target for Current Month
-            const currentMonth = new Date().toISOString().split('T')[0].substring(0, 7) + '-01';
-            const targetData = await marketingService.getManagerTarget(profile.id, currentMonth);
-            setTarget(targetData);
+            const managerId = profile.id; // Corrected: Using 'id' from emp_profile, not user.id from auth
+            const district = profile.district;
+            const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-01`;
+
+            // 2. Parallel Fetching
+            const [salesRes, targetRes, teamRes] = await Promise.all([
+                marketingService.getTalukaSales(district),
+                marketingService.getManagerTarget(managerId, currentMonth),
+                marketingService.getTeamPerformance(managerId)
+            ]);
+
+            setDashboardData({
+                managerName: profile.full_name,
+                district: district,
+                salesData: salesRes,
+                targets: targetRes,
+                teamPerformance: teamRes
+            });
 
         } catch (error) {
-            console.error('Error initializing dashboard:', error);
+            console.error('Dashboard Error:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const totalSales = talukaData.reduce((sum, item) => sum + item.sales, 0);
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
+    }
 
-    const formatCurrency = (val) => {
-        return new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0
-        }).format(val);
-    };
-
-    if (loading) return (
-        <div className={styles.loadingContainer}>
-            <div className={styles.loader}></div>
-            <p>Loading your dashboard...</p>
-        </div>
-    );
+    const { managerName, district, salesData, targets, teamPerformance } = dashboardData;
 
     return (
         <div className={styles.container}>
-            {/* Top Overview Cards */}
-            <div className={styles.statsGrid}>
-                <div className={`${styles.statCard} ${styles.blueGradient}`}>
-                    <div className={styles.statContent}>
-                        <span className={styles.statLabel}>Total Sales</span>
-                        <h2 className={styles.statValue}>{totalSales} T</h2>
-                        <span className={styles.statSubText}>Across {talukaData.length} Talukas</span>
-                    </div>
-                    <div className={styles.statIcon}>
-                        <TrendingUp size={40} />
-                    </div>
+            {/* 1. Welcome Section */}
+            <div className={styles.welcomeCard}>
+                <div className={styles.welcomeText}>
+                    <h2>Welcome, {managerName.split(' ')[0]} 👋</h2>
+                    <p>
+                        <MapPin size={14} />
+                        Assigned District: <span className="font-medium text-gray-900">{district}</span>
+                    </p>
                 </div>
-
-                {target && (
-                    <div className={styles.statCard}>
-                        <div className={styles.statContent}>
-                            <span className={styles.statLabel}>Revenue Progress</span>
-                            <h2 className={styles.statValue}>{formatCurrency(target.achieved_revenue || 0)}</h2>
-                            <span className={styles.statSubText}>Target: {formatCurrency(target.revenue_target)}</span>
-                        </div>
-                        <div className={styles.progressRing}>
-                            <svg viewBox="0 0 36 36" className={styles.circularChart}>
-                                <path className={styles.circleBg} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path className={styles.circle} strokeDasharray={`${Math.min((target.achieved_revenue / target.revenue_target) * 100, 100)}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            </svg>
-                            <span className={styles.percentage}>{Math.round((target.achieved_revenue / target.revenue_target) * 100)}%</span>
-                        </div>
-                    </div>
-                )}
-
-                {target && (
-                    <div className={styles.statCard}>
-                        <div className={styles.statContent}>
-                            <span className={styles.statLabel}>Order Progress</span>
-                            <h2 className={styles.statValue}>{target.achieved_orders || 0} Orders</h2>
-                            <span className={styles.statSubText}>Goal: {target.order_target}</span>
-                        </div>
-                        <div className={styles.progressRing}>
-                            <svg viewBox="0 0 36 36" className={styles.circularChart}>
-                                <path className={styles.circleBg} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path className={styles.circle} style={{ stroke: '#10b981' }} strokeDasharray={`${Math.min((target.achieved_orders / target.order_target) * 100, 100)}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            </svg>
-                            <span className={styles.percentage} style={{ color: '#059669' }}>{Math.round((target.achieved_orders / target.order_target) * 100)}%</span>
-                        </div>
-                    </div>
-                )}
+                <div className={styles.districtBadge}>
+                    <Activity size={16} />
+                    <span>Managing {salesData.chartData.length} Talukas</span>
+                </div>
             </div>
 
-            <div className={styles.mainGrid}>
-                {/* Sales Trend Chart */}
-                <div className={styles.chartCard}>
-                    <div className={styles.cardHeader}>
-                        <div className={styles.headerInfo}>
-                            <h3 className={styles.cardTitle}>Sales Trend by Taluka</h3>
-                            <div className={styles.locationBadge}>
-                                <MapPin size={14} />
-                                {selectedDistrict}
-                            </div>
+            {/* 2. Total Sales Card */}
+            <div className={styles.salesCard}>
+                <div className={styles.salesHeader}>
+                    <div>
+                        <div className={styles.salesSub} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            Total District Sales
+                            {loading && <RefreshCw className="animate-spin" size={12} />}
                         </div>
-                        <span className={styles.chartSubtitle}>Swipe horizontally to view all talukas</span>
+                        <div className={styles.salesValue}>
+                            {salesData.totalSales.toFixed(2)} T
+                        </div>
+                        <div className={styles.salesSub} style={{ opacity: 0.8 }}>
+                            Across {salesData.chartData.length} Talukas in {district}
+                        </div>
                     </div>
+                    <div className={styles.salesIcon}>
+                        <TrendingUp size={32} color="white" />
+                    </div>
+                </div>
+                <div className={styles.liveIndicator}>
+                    <div className={styles.blinkDot}></div>
+                    <span>Live updates from completed orders</span>
+                </div>
+            </div>
 
-                    <div className={styles.chartWrapper}>
-                        <ResponsiveContainer width="100%" height={300} minWidth={0} debounce={50}>
-                            <AreaChart data={talukaData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+            {/* 3. Sales Trend Chart */}
+            <div className={styles.chartCard}>
+                <div className={styles.cardHeader}>
+                    <h3 className={styles.cardTitle}>Sales Trend by Taluka</h3>
+                    <div className={styles.districtBadge} style={{ background: '#eff6ff', color: '#2563eb' }}>
+                        <MapPin size={14} /> {district}
+                    </div>
+                </div>
+                <div className={styles.chartContainer}>
+                    {salesData.chartData.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                            <AlertCircle size={48} className="mb-2" />
+                            <p>No sales data available</p>
+                        </div>
+                    ) : (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={salesData.chartData}>
                                 <defs>
                                     <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />
                                         <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                                 <XAxis
                                     dataKey="taluka"
                                     axisLine={false}
                                     tickLine={false}
-                                    tick={{ fill: '#64748b', fontSize: 10 }}
+                                    tick={{ fill: '#6b7280', fontSize: 12 }}
                                     dy={10}
                                 />
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
-                                    tick={{ fill: '#64748b', fontSize: 10 }}
+                                    tick={{ fill: '#6b7280', fontSize: 12 }}
+                                    tickFormatter={(val) => `${val}T`}
                                 />
                                 <Tooltip
-                                    contentStyle={{
-                                        borderRadius: '12px',
-                                        border: 'none',
-                                        boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'
-                                    }}
+                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                                    formatter={(value) => [`${value} T`, 'Sales']}
                                 />
                                 <Area
                                     type="monotone"
@@ -191,73 +181,189 @@ const MarketingDashboard = () => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                    </div>
+                    )}
                 </div>
+            </div>
 
-                {/* Target Information Card */}
-                <div className={styles.targetCard}>
+            <div className={styles.grid2}>
+                {/* 4. Assigned Target Card */}
+                <div className={styles.targetSection}>
                     <div className={styles.cardHeader}>
-                        <h3 className={styles.cardTitle}>Current Month Target</h3>
-                        <div className={styles.monthBadge}>
-                            <Calendar size={14} />
+                        <h3 className={styles.cardTitle}>Your Monthly Target</h3>
+                        <div className={styles.districtBadge} style={{ background: '#f3f4f6', color: '#4b5563' }}>
                             {new Date().toLocaleString('default', { month: 'short', year: 'numeric' })}
                         </div>
                     </div>
 
-                    {!target ? (
-                        <div className={styles.noTarget}>
-                            <AlertCircle size={48} className={styles.warnIcon} />
-                            <h4>No Target Assigned</h4>
-                            <p>Contact your supervisor for target assignment.</p>
+                    {!targets ? (
+                        <div className="flex flex-col items-center justify-center py-8 text-center">
+                            <Target size={40} className="text-gray-300 mb-3" />
+                            <p className="text-gray-500 text-sm">No target assigned yet</p>
                         </div>
                     ) : (
-                        <div className={styles.targetContent}>
-                            <div className={styles.targetMetrics}>
-                                <div className={styles.metricItem}>
-                                    <span className={styles.metricLabel}>Revenue</span>
-                                    <div className={styles.metricValues}>
-                                        <span className={styles.current}>{formatCurrency(target.achieved_revenue)}</span>
-                                        <span className={styles.goal}>/ {formatCurrency(target.revenue_target)}</span>
-                                    </div>
-                                    <div className={styles.progressBar}>
-                                        <div
-                                            className={styles.progress}
-                                            style={{ width: `${Math.min((target.achieved_revenue / target.revenue_target) * 100, 100)}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
+                        <>
+                            {/* Revenue Target */}
+                            <TargetMetric
+                                title="Revenue Target"
+                                icon={<TrendingUp size={20} className="text-blue-600" />}
+                                current={targets.achieved_revenue || 0}
+                                target={targets.revenue_target || 0}
+                                isCurrency={true}
+                                color="blue"
+                            />
 
-                                <div className={styles.metricItem}>
-                                    <span className={styles.metricLabel}>Orders</span>
-                                    <div className={styles.metricValues}>
-                                        <span className={styles.current}>{target.achieved_orders}</span>
-                                        <span className={styles.goal}>/ {target.order_target}</span>
-                                    </div>
-                                    <div className={styles.progressBar}>
-                                        <div
-                                            className={`${styles.progress} ${styles.green}`}
-                                            style={{ width: `${Math.min((target.achieved_orders / target.order_target) * 100, 100)}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {target.remarks && (
-                                <div className={styles.remarksBox}>
-                                    <h4 className={styles.remarksTitle}>Remarks</h4>
-                                    <p>{target.remarks}</p>
-                                </div>
-                            )}
-
-                            <div className={styles.lastUpdated}>
-                                Updated: {new Date(target.assigned_at).toLocaleDateString()}
-                            </div>
-                        </div>
+                            {/* Order Target */}
+                            <TargetMetric
+                                title="Order Target"
+                                icon={<ShoppingCart size={20} className="text-purple-600" />}
+                                current={targets.achieved_orders || 0}
+                                target={targets.order_target || 0}
+                                isCurrency={false}
+                                color="purple"
+                            />
+                        </>
                     )}
+                </div>
+
+                {/* 5. Team Performance Card */}
+                <div className={styles.metricCard}>
+                    <div className={styles.cardHeader}>
+                        <h3 className={styles.cardTitle}>Team Performance</h3>
+                        <div className={styles.districtBadge}>
+                            <Users size={14} />
+                            {teamPerformance?.activeEmployees || 0}/{teamPerformance?.totalEmployees || 0} Active
+                        </div>
+                    </div>
+
+                    {!teamPerformance ? (
+                        <div className="flex flex-col items-center justify-center py-8">
+                            <Users size={40} className="text-gray-300 mb-3" />
+                            <p className="text-gray-500 text-sm">No team data</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <TeamStat
+                                    label="Total Revenue"
+                                    value={`₹${(teamPerformance.totalAchievedRevenue / 100000).toFixed(1)}L`}
+                                    sub="Revenue"
+                                    color="green"
+                                />
+                                <TeamStat
+                                    label="Avg Progress"
+                                    value={`${teamPerformance.averageProgress.toFixed(0)}%`}
+                                    sub="Target"
+                                    color="orange"
+                                />
+                            </div>
+
+                            <div className={styles.cardTitle} style={{ fontSize: '14px', marginBottom: '12px' }}>
+                                Top Performers
+                            </div>
+
+                            <div className={styles.topPerformerList}>
+                                {teamPerformance.topPerformers.map((p, i) => (
+                                    <div key={p.id} className={styles.performerItem}>
+                                        <div className={clsx(styles.rankBadge,
+                                            i === 0 ? styles.rank1 : i === 1 ? styles.rank2 : styles.rank3
+                                        )}>
+                                            {i + 1}
+                                        </div>
+                                        <div className={styles.performerInfo}>
+                                            <h4 className={styles.performerName}>{p.name}</h4>
+                                            <p className={styles.performerStats}>
+                                                {p.achievedOrders} orders • ₹{p.achievedRevenue.toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className={styles.performerScore}>
+                                            {(p.overallProgress * 100).toFixed(0)}%
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {/* 6. Action Buttons */}
+            <div className={styles.actionRow}>
+                <button
+                    className={styles.refreshBtn}
+                    onClick={() => fetchDashboardData()}
+                >
+                    <RefreshCw size={20} />
+                    Refresh All
+                </button>
+                <button className={styles.manageBtn}>
+                    <UserPlus size={20} />
+                    Manage Team
+                </button>
+            </div>
+
+            {/* 7. Real-time Info */}
+            <div className={styles.infoCard}>
+                <Info size={20} className="text-blue-500 mt-1" />
+                <div>
+                    <h4 className="font-semibold text-gray-800 text-sm">Real-time Dashboard</h4>
+                    <p className="text-xs text-gray-500 mt-1">All data updates automatically as orders are completed. Targets are auto-calculated based on achievements.</p>
                 </div>
             </div>
         </div>
     );
 };
+
+// Helper Components
+const TargetMetric = ({ title, icon, current, target, isCurrency, color }) => {
+    const progress = Math.min((current / (target || 1)) * 100, 100);
+    const completed = progress >= 100;
+
+    return (
+        <div className="mb-6 last:mb-0">
+            <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-full bg-${color}-50`}>
+                        {icon}
+                    </div>
+                    <div>
+                        <div className="text-sm font-semibold text-gray-700">{title}</div>
+                        <div className="text-xs text-gray-500">
+                            {completed ? 'Target Achieved 🎉' : 'In Progress'}
+                        </div>
+                    </div>
+                </div>
+                <div className={`px-2 py-1 rounded-full text-xs font-bold ${completed ? 'bg-green-100 text-green-700' : 'bg-blue-50 text-blue-700'}`}>
+                    {progress.toFixed(0)}%
+                </div>
+            </div>
+
+            <div className="flex justify-between items-end mb-2">
+                <div className="text-2xl font-bold text-gray-800">
+                    {isCurrency ? '₹' : ''}{current.toLocaleString()}
+                    <span className="text-sm text-gray-400 font-normal ml-1">
+                        / {isCurrency ? '₹' : ''}{target.toLocaleString()}
+                    </span>
+                </div>
+            </div>
+
+            <div className={styles.progressBar}>
+                <div
+                    className={styles.progressFill}
+                    style={{
+                        width: `${progress}%`,
+                        backgroundColor: completed ? '#22c55e' : (color === 'purple' ? '#9333ea' : '#3b82f6')
+                    }}
+                ></div>
+            </div>
+        </div>
+    );
+};
+
+const TeamStat = ({ label, value, sub, color }) => (
+    <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+        <div className="text-xs text-gray-500 mb-1">{label}</div>
+        <div className={`text-lg font-bold text-${color}-600`}>{value}</div>
+    </div>
+);
 
 export default MarketingDashboard;

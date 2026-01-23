@@ -120,6 +120,10 @@ const OwnerDashboard = () => {
         return colors[color] || '#3b82f6';
     };
 
+    // Date formatter
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
     return (
         <div className={styles.container}>
             <header className={styles.dashboardHeader}>
@@ -129,9 +133,36 @@ const OwnerDashboard = () => {
                 </div>
                 <div className={styles.dateFilter}>
                     <TrendingUp size={16} className="text-green-500" />
-                    <span className="text-sm font-semibold">Today's Performance</span>
+                    <span className="text-sm font-semibold">{dateStr}</span>
                 </div>
             </header>
+
+            {/* Profit Card - New from Flutter Parity */}
+            <div className={`${styles.profitCard} ${data.totalProfit < 0 ? styles.negative : ''}`}>
+                <div className={styles.profitHeader}>
+                    <div>
+                        <div className={styles.profitTitle}>Monthly Net Profit</div>
+                        <h2 className={styles.profitValue}>₹{data.totalProfit.toLocaleString()}</h2>
+                        <div className={styles.profitSub}>{data.profitMargin.toFixed(1)}% Margin</div>
+                    </div>
+                    <div className={styles.profitChart}>
+                        {/* Circular Progress Placeholder */}
+                        <div style={{ position: 'relative', width: 40, height: 40, borderRadius: '50%', background: `conic-gradient(white ${data.profitMargin}%, rgba(255,255,255,0.2) 0)` }}>
+                            <div style={{ position: 'absolute', top: 4, left: 4, right: 4, bottom: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}></div>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.profitFooter}>
+                    <div className={styles.profitPill}>
+                        <IndianRupee size={16} />
+                        <span>Rev: ₹{(data.totalRevenue / 100000).toFixed(1)}L</span>
+                    </div>
+                    <div className={styles.profitPill}>
+                        <Package size={16} />
+                        <span>Cost: ₹{(data.totalRawMaterialCost / 100000).toFixed(1)}L</span>
+                    </div>
+                </div>
+            </div>
 
             {/* Metrics Grid */}
             <div className={styles.grid}>
@@ -210,8 +241,53 @@ const OwnerDashboard = () => {
                     </div>
                 </div>
 
-                {/* Quick Actions & Top Products Container */}
+                {/* Right Column: Actions & Products */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                    {/* Production Card - New from Flutter Parity */}
+                    <div className={styles.productionCard}>
+                        <div className={styles.cardHeader}>
+                            <h3 className={styles.cardTitle}>Production Status</h3>
+                        </div>
+                        <div className={styles.productionItem}>
+                            <div className={styles.prodHeader}>
+                                <span>Production</span>
+                                <span>{data.productionToday} / {data.productionTarget} T</span>
+                            </div>
+                            <div className={styles.prodBarBg}>
+                                <div
+                                    className={styles.prodBarFill}
+                                    style={{
+                                        width: `${Math.min((data.productionToday / data.productionTarget) * 100, 100)}%`,
+                                        backgroundColor: '#3B82F6'
+                                    }}
+                                ></div>
+                            </div>
+                            <div className={styles.prodFooter}>
+                                <span>Today's Output</span>
+                                <span>{((data.productionToday / data.productionTarget) * 100).toFixed(0)}%</span>
+                            </div>
+                        </div>
+                        <div className={styles.productionItem}>
+                            <div className={styles.prodHeader}>
+                                <span>Dispatch</span>
+                                <span>{data.dispatchedToday} / {data.ordersToDispatch} Orders</span>
+                            </div>
+                            <div className={styles.prodBarBg}>
+                                <div
+                                    className={styles.prodBarFill}
+                                    style={{
+                                        width: `${Math.min((data.dispatchedToday / data.ordersToDispatch) * 100, 100)}%`,
+                                        backgroundColor: '#10B981'
+                                    }}
+                                ></div>
+                            </div>
+                            <div className={styles.prodFooter}>
+                                <span>Order Fulfillment</span>
+                                <span>{((data.dispatchedToday / data.ordersToDispatch) * 100).toFixed(0)}%</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Quick Actions */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
@@ -242,63 +318,121 @@ const OwnerDashboard = () => {
                             </button>
                         </div>
                     </div>
-
-                    {/* Top Products */}
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <h3 className={styles.cardTitle}>Top Products</h3>
-                        </div>
-                        <div className={styles.productList}>
-                            {data.topProducts.map((product, index) => (
-                                <div key={index} className={styles.productItem}>
-                                    <div className={clsx(styles.rankBadge,
-                                        index === 0 ? styles.bgOrange : index === 1 ? styles.bgBlue : styles.bgPurple
-                                    )}>
-                                        #{index + 1}
-                                    </div>
-                                    <div className={styles.productInfo}>
-                                        <h4>{product.name}</h4>
-                                        <p>{product.sales} sales</p>
-                                    </div>
-                                    <div className={styles.productValue}>
-                                        <p className={styles.productPrice}>₹{(product.revenue / 1000).toFixed(1)}k</p>
-                                        <div className={clsx(styles.productGrowth, styles.textGreen)}>+12%</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            {/* Recent Activity */}
-            <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                    <h3 className={styles.cardTitle}>Recent Activity</h3>
-                    <span className={styles.viewAll}>View All Log</span>
-                </div>
-                <div className={styles.activityList}>
-                    {data.recentActivities.map((activity, index) => {
-                        const Icon = getActivityIcon(activity.icon);
+            {/* Material Cost Breakdown - New from Flutter Parity */}
+            {data.materialCostBreakdown && (
+                <div className={styles.costCard}>
+                    <div className={styles.cardHeader}>
+                        <h3 className={styles.cardTitle}>Material Cost Breakdown</h3>
+                    </div>
+                    {Object.entries(data.materialCostBreakdown).map(([name, cost], index) => {
+                        const colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'];
+                        const color = colors[index % colors.length];
                         return (
-                            <div key={index} className={styles.activityItem}>
-                                <div className={styles.activityIcon} style={{
-                                    backgroundColor: `${getActivityColor(activity.color)}15`,
-                                    color: getActivityColor(activity.color)
-                                }}>
-                                    <Icon size={18} />
+                            <div key={name} className={styles.costItem}>
+                                <div className={styles.costLabel}>
+                                    <div className={styles.costColor} style={{ backgroundColor: color }}></div>
+                                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>{name}</span>
                                 </div>
-                                <div className={styles.activityContent}>
-                                    <h4>{activity.title}</h4>
-                                    <p>{activity.description}</p>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                                    ₹{cost.toLocaleString()}
                                 </div>
-                                <div className={styles.activityTime}>{activity.time}</div>
                             </div>
                         );
                     })}
                 </div>
-            </div>
+            )}
 
+            <div className={styles.chartSection} style={{ gridTemplateColumns: '1fr 1fr' }}>
+                {/* Top Products */}
+                <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                        <div>
+                            <h3 className={styles.cardTitle}>Top Selling Products</h3>
+                            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>By revenue</p>
+                        </div>
+                    </div>
+                    {data.topProducts.length === 0 ? (
+                        <div className={styles.emptyState}>
+                            <Package size={40} className={styles.emptyIcon} />
+                            <p className={styles.emptyText}>No product data</p>
+                        </div>
+                    ) : (
+                        <div className={styles.productList}>
+                            {data.topProducts.map((product, index) => {
+                                const rankClass = index === 0 ? styles.rank1 : index === 1 ? styles.rank2 : styles.rank3;
+                                return (
+                                    <div key={index} className={styles.productItem}>
+                                        <div className={clsx(styles.rankBadge, rankClass)}>
+                                            {index + 1}
+                                        </div>
+                                        <div className={styles.productInfo}>
+                                            <h4 className={styles.productName}>{product.name}</h4>
+                                            <div className={styles.productMeta}>
+                                                <div className={styles.salesTag}>
+                                                    {product.sales} sales
+                                                </div>
+                                                <span className={styles.revenueText}>
+                                                    ₹{product.revenue.toLocaleString()}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className={styles.productRevenuePill}>
+                                            ₹{(product.revenue / 1000).toFixed(0)}k
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Recent Activity */}
+                <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                        <div>
+                            <h3 className={styles.cardTitle}>Recent Activities</h3>
+                            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>Latest updates</p>
+                        </div>
+                    </div>
+                    {data.recentActivities.length === 0 ? (
+                        <div className={styles.emptyState}>
+                            <Bell size={40} className={styles.emptyIcon} />
+                            <p className={styles.emptyText}>No recent activities</p>
+                        </div>
+                    ) : (
+                        <div className={styles.activityList}>
+                            {data.recentActivities.map((activity, index) => {
+                                const Icon = getActivityIcon(activity.icon);
+                                const color = getActivityColor(activity.color);
+                                return (
+                                    <div key={index} className={styles.activityItem}>
+                                        <div className={styles.activityIcon} style={{
+                                            backgroundColor: `${color}1A`, // 10% opacity
+                                            border: `1px solid ${color}33`, // 20% opacity
+                                        }}>
+                                            <Icon size={20} color={color} />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                                <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>{activity.title}</span>
+                                                <span className={styles.activityTime}>{activity.time}</span>
+                                            </div>
+                                            {activity.description && (
+                                                <p style={{ fontSize: '12px', color: '#4b5563', margin: 0, lineHeight: '1.4' }}>
+                                                    {activity.description}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </div>
             {/* Action Modals */}
             <Modal
                 isOpen={modalConfig.isOpen}

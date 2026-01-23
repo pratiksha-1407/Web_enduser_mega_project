@@ -1,0 +1,223 @@
+.pageContainer {
+    background-color: #f9fafb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.headerBlock {
+    background-color: #2563eb;
+    padding: 24px 24px 32px 24px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    color: white;
+}
+
+.headerLabel {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 4px;
+}
+
+.orderIdTitle {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: white;
+}
+
+.orderSubtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+/* Content Area */
+.contentArea {
+    flex: 1;
+    padding: 20px 16px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Status Card */
+.statusCard {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+    margin-top: -10px;
+}
+
+.statusHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.statusLabel {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.statusValue {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.statusBadge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.hasDivider {
+    border-top: 1px solid #e5e7eb;
+    margin: 16px 0;
+}
+
+/* Info Rows */
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.infoRow:last-child {
+    margin-bottom: 0;
+}
+
+.infoLabel {
+    font-size: 13px;
+    color: #6b7280;
+    flex: 1;
+}
+
+.infoValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1f2937;
+    flex: 2;
+    text-align: right;
+}
+
+/* Timeline */
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-left: 4px;
+}
+
+.timelineCard {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+}
+
+.timelineStep {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+}
+
+.stepIndicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #e5e7eb;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.dotActive {
+    border-color: #2563eb;
+    background: #2563eb;
+}
+
+.dotCompleted {
+    border-color: #10b981;
+    background: #10b981;
+}
+
+.line {
+    width: 2px;
+    flex: 1;
+    background: #e5e7eb;
+    min-height: 30px;
+    margin-top: -2px;
+    margin-bottom: -2px;
+}
+
+.lineCompleted {
+    background: #10b981;
+}
+
+.stepContent {
+    flex: 1;
+    padding-bottom: 16px;
+}
+
+.stepHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.stepTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.stepTitleActive {
+    color: #2563eb;
+}
+
+.stepTitleCompleted {
+    color: #10b981;
+}
+
+.stepTime {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.stepDesc {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.errorState {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+}

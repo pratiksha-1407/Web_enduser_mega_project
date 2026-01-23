@@ -1,0 +1,283 @@
+.pageContainer {
+    background-color: #f9fafb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Block */
+.headerBlock {
+    background-color: #2563eb;
+    /* Primary Blue */
+    padding: 24px;
+    padding-bottom: 32px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    color: white;
+}
+
+.headerTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 6px;
+}
+
+.headerSubtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+/* Main Content */
+.contentArea {
+    padding: 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Search Box */
+.searchCard {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: -10px;
+    /* Slight overlap if needed, or just standard */
+    border: 1px solid #f3f4f6;
+}
+
+.searchIcon {
+    color: #2563eb;
+    min-width: 20px;
+}
+
+.searchInput {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #1f2937;
+    padding: 4px 0;
+}
+
+.searchInput::placeholder {
+    color: #9ca3af;
+}
+
+/* List Headers */
+.listHeaderRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.listTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.listCount {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.dateGroupHeader {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 16px 0 8px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Order Card */
+.orderCard {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.orderCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #d1d5db;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.orderId {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.customerName {
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.4;
+}
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Details Row */
+.cardDetails {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f9fafb;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.detailColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.detailIcon {
+    color: #9ca3af;
+    margin-bottom: 6px;
+}
+
+.detailLabel {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.detailValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Load More */
+.loadMoreBtn {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #2563eb;
+    background: transparent;
+    color: #2563eb;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.loadMoreBtn:hover {
+    background: #eff6ff;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.emptyIcon {
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+
+.emptyTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Status Colors */
+.status_completed,
+.status_delivered {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.status_pending {
+    background-color: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #fed7aa;
+}
+
+.status_cancelled {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status_packing,
+.status_ready_for_dispatch {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+
+.status_dispatched {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}

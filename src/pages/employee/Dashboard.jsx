@@ -101,8 +101,14 @@ const Dashboard = () => {
     const currentMonthAchieved = targetData.achieved?.[currentMonthIndex] || 0;
     const progress = currentMonthTarget > 0 ? Math.round((currentMonthAchieved / currentMonthTarget) * 100) : 0;
 
+    // Year Summary Stats
+    const totalTarget = targetData.targets?.reduce((a, b) => a + b, 0) || 0;
+    const totalAchieved = targetData.achieved?.reduce((a, b) => a + b, 0) || 0;
+    const yearProgress = totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
+
     // Date for Welcome
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' });
+    const currentMonthName = new Date().toLocaleString('default', { month: 'short' });
 
     return (
         <div className={styles.dashboard}>
@@ -137,7 +143,7 @@ const Dashboard = () => {
             <div>
                 <h2 className={styles.sectionTitle}>
                     <ShoppingCart size={22} className="text-blue-500" />
-                    Order Intelligence
+                    Orders Overview
                 </h2>
                 <div className={styles.statsGrid}>
                     <div className={styles.statCard} onClick={() => navigate('/employee/orders/total')}>
@@ -148,7 +154,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                             <h3 className={styles.statValue}>{orderCounts.total}</h3>
-                            <p className={styles.statLabel}>Total Orders</p>
+                            <p className={styles.statLabel}>Total</p>
                         </div>
                     </div>
                     <div className={styles.statCard} onClick={() => navigate('/employee/orders/pending')}>
@@ -176,35 +182,51 @@ const Dashboard = () => {
                 </div>
             </div>
 
+            {/* Current Month Progress */}
+            <div className={styles.progressCard}>
+                <div className={styles.progressHeader}>
+                    <h3 className={styles.cardTitle} style={{ fontSize: '16px', margin: 0 }}>Current Month Progress</h3>
+                    <span className={styles.monthBadge}>{currentMonthName}</span>
+                </div>
+
+                <div className={styles.progressLabels}>
+                    <span style={{ color: currentMonthTarget > 0 ? '#6B7280' : '#F59E0B' }}>
+                        Target: {currentMonthTarget.toFixed(1)} T
+                    </span>
+                    <span style={{ color: '#2563EB', fontWeight: '600' }}>
+                        Achieved: {currentMonthAchieved.toFixed(1)} T
+                    </span>
+                </div>
+
+                <div className={styles.progressBarBack}>
+                    <div
+                        className={`${styles.progressBarFill} ${progress >= 100 ? styles.success : ''}`}
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                    ></div>
+                </div>
+
+                <div className={styles.progressFooter}>
+                    <span style={{ color: progress >= 100 ? '#10B981' : '#2563EB' }}>
+                        {progress >= 100 ? "Target Achieved" : `${progress}%`}
+                    </span>
+                    {currentMonthTarget > 0 && currentMonthAchieved < currentMonthTarget && (
+                        <span style={{ color: '#F59E0B', fontWeight: '500', fontSize: '12px' }}>
+                            {(currentMonthTarget - currentMonthAchieved).toFixed(1)} T remaining
+                        </span>
+                    )}
+                </div>
+            </div>
+
             {/* Performance Section */}
             <div className={styles.chartContainer}>
                 <div className={styles.chartHeader}>
                     <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
                         <TrendingUp size={22} className="text-blue-500" />
-                        Sales Performance
+                        Performance vs Target
                     </h2>
-                    <select className={styles.chartSelect}>
-                        <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
-                    </select>
-                </div>
-
-                <div className={styles.monthStats}>
-                    <div className={styles.monthStatItem}>
-                        <div className={styles.monthStatLabel}>Monthly Target</div>
-                        <div className={styles.monthStatValue}>{currentMonthTarget} Tons</div>
-                    </div>
-                    <div className={styles.monthStatItem}>
-                        <div className={styles.monthStatLabel}>Achieved</div>
-                        <div className={`${styles.monthStatValue} ${currentMonthAchieved >= currentMonthTarget ? styles.monthStatValueSuccess : styles.monthStatValuePrimary}`}>
-                            {currentMonthAchieved} Tons
-                        </div>
-                    </div>
-                    <div className={styles.monthStatItem}>
-                        <div className={styles.monthStatLabel}>Completion</div>
-                        <div className={`${styles.monthStatValue} ${progress >= 100 ? styles.monthStatValueSuccess : styles.monthStatValueWarning}`}>
-                            {progress}%
-                        </div>
-                    </div>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#2563EB', background: '#EFF6FF', padding: '4px 12px', borderRadius: '12px' }}>
+                        {new Date().getFullYear()}
+                    </span>
                 </div>
 
                 <div className={styles.chartWrapper}>
@@ -242,24 +264,18 @@ const Dashboard = () => {
                                 />
                                 <Bar
                                     dataKey="Target"
-                                    fill="#E5E7EB"
+                                    fill="#E5E7EB" // Grey target bar
                                     radius={[4, 4, 0, 0]}
-                                    barSize={20}
+                                    barSize={14}
                                     name="Target (Tons)"
                                 />
                                 <Bar
                                     dataKey="Achieved"
-                                    fill="url(#colorAchieved)"
+                                    fill="#2563EB" // Blue achieved bar
                                     radius={[4, 4, 0, 0]}
-                                    barSize={20}
+                                    barSize={10}
                                     name="Achieved (Tons)"
                                 />
-                                <defs>
-                                    <linearGradient id="colorAchieved" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#2563EB" stopOpacity={1} />
-                                        <stop offset="100%" stopColor="#3B82F6" stopOpacity={0.8} />
-                                    </linearGradient>
-                                </defs>
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (
@@ -269,6 +285,29 @@ const Dashboard = () => {
                         </div>
                     )}
                 </div>
+
+                {/* Year Summary */}
+                {chartData.length > 0 && (
+                    <div className={styles.yearSummary}>
+                        <h4 className={styles.yearSummaryTitle}>Year {new Date().getFullYear()} Summary</h4>
+                        <div className={styles.summaryLoginGrid}>
+                            <div className={styles.summaryItem}>
+                                <h4>Total Target</h4>
+                                <p style={{ color: '#374151' }}>{totalTarget.toFixed(1)} T</p>
+                            </div>
+                            <div className={styles.summaryItem}>
+                                <h4>Total Achieved</h4>
+                                <p style={{ color: '#2563EB' }}>{totalAchieved.toFixed(1)} T</p>
+                            </div>
+                            <div className={styles.summaryItem}>
+                                <h4>Overall Progress</h4>
+                                <p style={{ color: yearProgress >= 100 ? '#10B981' : '#F59E0B' }}>
+                                    {yearProgress.toFixed(1)}%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

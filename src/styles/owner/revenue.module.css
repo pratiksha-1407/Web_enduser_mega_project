@@ -1,0 +1,352 @@
+.container {
+    padding: 24px;
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.iconButton {
+    background: white;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.iconButton:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Filter Bar */
+.filterBar {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.filterChip {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #4b5563;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.filterChip:hover {
+    background-color: #f3f4f6;
+}
+
+.filterChipActive {
+    background-color: #eff6ff;
+    border-color: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Summary Card */
+.summaryCard {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.summaryItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.summaryValue {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.summaryLabel {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.summaryDivider {
+    width: 1px;
+    height: 40px;
+    background-color: #e5e7eb;
+}
+
+/* List */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.info {
+    flex: 1;
+}
+
+.districtName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.branchName {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.tagsRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.trailing {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.revenueValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.percentage {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modalContent {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modalTitle {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.closeIconBtn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.closeIconBtn:hover {
+    background-color: #f3f4f6;
+}
+
+.centeredAvatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.largeAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.detailRow {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.detailRow:last-child {
+    border-bottom: none;
+}
+
+.detailLabel {
+    width: 100px;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.detailValue {
+    font-size: 15px;
+    color: #111827;
+    font-weight: 500;
+    flex: 1;
+}
+
+.productChip {
+    padding: 4px 12px;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.closeButton {
+    width: 100%;
+    margin-top: 24px;
+    padding: 14px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.closeButton:hover {
+    background-color: #1d4ed8;
+}
+
+.loading,
+.empty,
+.error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    color: #6b7280;
+    text-align: center;
+}
+
+.retryBtn {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

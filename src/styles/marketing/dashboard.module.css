@@ -1,88 +1,92 @@
 .container {
     padding: 24px;
-    max-width: 1200px;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    max-width: 1400px;
     margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
-    animation: fadeIn 0.5s ease-out;
 }
 
-/* Welcome Section */
+/* 1. Welcome Card */
 .welcomeCard {
     background: white;
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-bottom: 24px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Softer shadow */
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
 }
 
 .welcomeText h2 {
     font-size: 20px;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0 0 4px 0;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
 }
 
 .welcomeText p {
-    font-size: 14px;
-    color: #6b7280;
     display: flex;
     align-items: center;
     gap: 6px;
-    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .districtBadge {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #f3f4f6;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #4b5563;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-radius: 8px;
+    /* Slightly less rounded */
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid #dbeafe;
 }
 
-/* Total Sales Card */
+/* 2. Sales Card */
 .salesCard {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: 20px;
+    padding: 28px;
     color: white;
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
-    margin-bottom: 24px;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
     position: relative;
     overflow: hidden;
+    margin-bottom: 24px;
 }
 
 .salesHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+.salesValue {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 12px 0;
+    letter-spacing: -1px;
 }
 
 .salesSub {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-}
-
-.salesValue {
-    font-size: 32px;
-    font-weight: 700;
-    margin: 8px 0;
-    line-height: 1.2;
 }
 
 .salesIcon {
     width: 64px;
     height: 64px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,8 +97,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-top: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    width: fit-content;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
 }
 
 .blinkDot {
@@ -102,67 +111,53 @@
     height: 8px;
     background-color: #4ade80;
     border-radius: 50%;
-    animation: blink 1.5s infinite;
+    animation: blink 2s infinite;
 }
 
 @keyframes blink {
     0% {
         opacity: 1;
-        transform: scale(1);
     }
 
     50% {
-        opacity: 0.5;
-        transform: scale(0.8);
+        opacity: 0.4;
     }
 
     100% {
         opacity: 1;
-        transform: scale(1);
     }
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Chart Section */
+/* 3. Charts */
 .chartCard {
     background: white;
+    padding: 24px;
     border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    height: 360px;
     margin-bottom: 24px;
+}
+
+.chartContainer {
+    width: 100%;
+    height: 280px;
+    margin-top: 20px;
 }
 
 .cardHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .cardTitle {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: #1f2937;
-    margin: 0;
 }
 
-.chartContainer {
-    height: 300px;
-    width: 100%;
-}
-
-/* Grid Layout */
+/* 4. Grid Layout for Target & Team */
 .grid2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -170,174 +165,153 @@
     margin-bottom: 24px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .grid2 {
         grid-template-columns: 1fr;
     }
 }
 
-/* Stats Cards */
-.targetSection,
-.metricCard {
+.metricCard,
+.targetSection {
     background: white;
+    padding: 24px;
     border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    height: 100%;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Progress Bars */
 .progressBar {
     height: 8px;
     background-color: #f3f4f6;
     border-radius: 4px;
     overflow: hidden;
-    margin-top: 8px;
 }
 
 .progressFill {
     height: 100%;
     border-radius: 4px;
-    transition: width 1s ease-out;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Top Performers */
-.topPerformerList {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
+/* Performers List */
 .performerItem {
     display: flex;
     align-items: center;
     padding: 12px;
-    background-color: white;
     border: 1px solid #f3f4f6;
     border-radius: 12px;
-    gap: 12px;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
+}
+
+.performerItem:hover {
+    transform: translateY(-2px);
+    border-color: #e5e7eb;
 }
 
 .rankBadge {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     color: white;
-    flex-shrink: 0;
     font-size: 14px;
+    margin-right: 12px;
+    flex-shrink: 0;
 }
 
 .rank1 {
-    background-color: #b45309;
-    box-shadow: 0 2px 4px rgba(180, 83, 9, 0.3);
+    background-color: #f59e0b;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
 }
 
-/* Gold/Amber */
 .rank2 {
     background-color: #6b7280;
-    box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
 }
 
-/* Silver/Grey */
 .rank3 {
-    background-color: #c2410c;
-    box-shadow: 0 2px 4px rgba(194, 65, 12, 0.3);
-}
-
-/* Bronze/Orange */
-.rankBadge:not(.rank1):not(.rank2):not(.rank3) {
-    background-color: #3b82f6;
+    background-color: #ea580c;
 }
 
 .performerInfo {
     flex: 1;
-    overflow: hidden;
 }
 
 .performerName {
     font-size: 14px;
     font-weight: 600;
     color: #1f2937;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin-bottom: 2px;
 }
 
 .performerStats {
-    font-size: 11px;
+    font-size: 12px;
     color: #6b7280;
-    margin: 2px 0 0;
 }
 
 .performerScore {
-    background-color: #ecfdf5;
-    color: #059669;
-    padding: 4px 8px;
+    padding: 4px 10px;
+    background-color: #f0fdf4;
+    color: #15803d;
+    font-weight: 700;
     border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
 }
 
-/* Action Buttons */
+/* 5. Action Row */
 .actionRow {
     display: flex;
     gap: 16px;
     margin-bottom: 24px;
 }
 
-.refreshBtn {
+.refreshBtn,
+.manageBtn {
     flex: 1;
-    background-color: #10b981;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 14px;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.refreshBtn {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    color: #374151;
 }
 
 .refreshBtn:hover {
-    background-color: #059669;
+    background-color: #f9fafb;
 }
 
 .manageBtn {
-    flex: 1;
-    background-color: transparent;
-    color: #2563eb;
-    border: 1px solid #2563eb;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 14px;
+    background-color: #2563eb;
+    color: white;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
 }
 
 .manageBtn:hover {
-    background-color: #eff6ff;
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
 }
 
-/* Info Card */
+/* 6. Info Card */
 .infoCard {
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background-color: #eff6ff;
+    border: 1px solid #dbeafe;
     border-radius: 12px;
     padding: 16px;
     display: flex;
     gap: 12px;
-    align-items: flex-start;
 }

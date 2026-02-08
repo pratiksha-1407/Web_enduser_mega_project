@@ -1,185 +1,217 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ownerService } from '../../services/ownerService';
 import styles from '../../styles/owner/employees.module.css';
-import { Search, Plus, Star, MapPin, Users, Briefcase } from 'lucide-react';
+import { Filter, RefreshCw, X, User, Users, Phone, Mail, MapPin, Calendar, Briefcase } from 'lucide-react';
 
-const EmployeesPage = () => {
+const Employees = () => {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedBranch, setSelectedBranch] = useState('All Branches');
-    const [selectedRole, setSelectedRole] = useState('All Roles');
+    const [error, setError] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('All');
+    const [showFilter, setShowFilter] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-    // Mock branches based on Flutter repo for visual richness
-    const branches = [
-        { name: "Pune Branch", district: "Pune", count: 28, manager: "Rajesh Kumar", performance: 4.6 },
-        { name: "Mumbai Branch", district: "Mumbai", count: 35, manager: "Priya Sharma", performance: 4.8 },
-        { name: "Satara Branch", district: "Satara", count: 18, manager: "Amit Patel", performance: 4.3 },
-    ];
-
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
-
-    const fetchEmployees = async () => {
+    const loadEmployees = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
             const data = await ownerService.getEmployees();
-            setEmployees(data || []);
-        } catch (error) {
-            console.error('Error fetching employees:', error);
+            setEmployees(data);
+        } catch (err) {
+            console.error("Failed to load employees", err);
+            setError("Failed to load employees");
         } finally {
             setLoading(false);
         }
     };
 
-    const filteredEmployees = employees.filter(emp => {
-        const matchesSearch = (emp.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-            (emp.email?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-        const matchesBranch = selectedBranch === 'All Branches' || emp.branch_name === selectedBranch;
-        const matchesRole = selectedRole === 'All Roles' || emp.role === selectedRole;
-        return matchesSearch && matchesBranch && matchesRole;
-    });
+    useEffect(() => {
+        loadEmployees();
+    }, []);
 
-    const getUniqueBranches = () => {
-        const unique = [...new Set(employees.map(e => e.branch_name).filter(Boolean))];
-        return ['All Branches', ...unique];
+    const filteredEmployees = useMemo(() => {
+        if (selectedStatus === 'All') return employees;
+        return employees.filter(emp => {
+            const status = (emp.status || 'Active').toLowerCase();
+            return status === selectedStatus.toLowerCase();
+        });
+    }, [employees, selectedStatus]);
+
+    const getStatusColor = (status) => {
+        switch ((status || '').toLowerCase()) {
+            case 'active': return '#16a34a'; // green-600
+            case 'inactive': return '#dc2626'; // red-600
+            default: return '#6b7280'; // gray-500
+        }
     };
 
-    const getUniqueRoles = () => {
-        const unique = [...new Set(employees.map(e => e.role).filter(Boolean))];
-        return ['All Roles', ...unique];
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
     };
 
     return (
         <div className={styles.container}>
             {/* Header */}
-            <div className={styles.sectionHeader}>
-                <div className={styles.titleSection}>
-                    <h2>Employee Management</h2>
-                    <p>Monitor performance and manage staff members.</p>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Employee Details</h1>
+                <div className={styles.headerActions}>
+                    <button
+                        className={styles.iconButton}
+                        onClick={() => setShowFilter(!showFilter)}
+                        title="Filter"
+                    >
+                        <Filter size={20} />
+                    </button>
+                    <button
+                        className={styles.iconButton}
+                        onClick={loadEmployees}
+                        title="Refresh"
+                    >
+                        <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+                    </button>
                 </div>
-                <button className={styles.addButton}>
-                    <Plus size={18} />
-                    Add New Staff
-                </button>
             </div>
 
-            {/* Branch Overview */}
-            <div className={styles.card}>
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <MapPin size={18} className="text-blue-600" />
-                    Branch Overview
-                </h3>
-                <div className={styles.branchGrid}>
-                    {branches.map((branch, i) => (
-                        <div key={i} className={styles.branchCard}>
-                            <div className={styles.branchHeader}>
-                                <span className={styles.branchName}>{branch.name}</span>
-                                <div className={styles.rating}>
-                                    <Star size={12} fill="currentColor" />
-                                    {branch.performance}
-                                </div>
-                            </div>
-                            <div className={styles.branchInfo}>
-                                <p className="flex items-center gap-2 text-gray-600">
-                                    <Users size={14} /> {branch.count} Employees
-                                </p>
-                                <p className="flex items-center gap-2 text-gray-600 mt-1">
-                                    <Briefcase size={14} /> Mgr: {branch.manager}
-                                </p>
-                            </div>
+            {/* Filter Dropdown (Simple implementation) */}
+            {showFilter && (
+                <div className="bg-white p-4 rounded-lg shadow-lg mb-4 border border-gray-100 absolute right-6 top-20 z-10 w-48">
+                    <p className="font-semibold mb-2 text-sm text-gray-600">Filter by Status</p>
+                    {['All', 'Active', 'Inactive'].map(status => (
+                        <div
+                            key={status}
+                            className={`p-2 rounded cursor-pointer text-sm ${selectedStatus === status ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-gray-50'}`}
+                            onClick={() => {
+                                setSelectedStatus(status);
+                                setShowFilter(false);
+                            }}
+                        >
+                            {status}
                         </div>
                     ))}
                 </div>
-            </div>
+            )}
 
-            {/* Filtering */}
-            <div className={styles.filterBar}>
-                <div className={styles.filterGroup}>
-                    <label className={styles.filterLabel}>Search</label>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Name or email..."
-                            className={`${styles.select} w-full pl-10`}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
+            {/* Content */}
+            {loading ? (
+                <div className={styles.loading}>
+                    <RefreshCw size={32} className="animate-spin text-blue-500 mb-2" />
+                    <p>Loading employees...</p>
                 </div>
-                <div className={styles.filterGroup}>
-                    <label className={styles.filterLabel}>Branch</label>
-                    <select
-                        className={styles.select}
-                        value={selectedBranch}
-                        onChange={(e) => setSelectedBranch(e.target.value)}
-                    >
-                        {getUniqueBranches().map(b => (
-                            <option key={b} value={b}>{b}</option>
-                        ))}
-                    </select>
+            ) : error ? (
+                <div className={styles.error}>
+                    <p className="text-red-500 mb-2">{error}</p>
+                    <button onClick={loadEmployees} className={styles.retryBtn}>Retry</button>
                 </div>
-                <div className={styles.filterGroup}>
-                    <label className={styles.filterLabel}>Role</label>
-                    <select
-                        className={styles.select}
-                        value={selectedRole}
-                        onChange={(e) => setSelectedRole(e.target.value)}
-                    >
-                        {getUniqueRoles().map(r => (
-                            <option key={r} value={r}>{r}</option>
-                        ))}
-                    </select>
+            ) : filteredEmployees.length === 0 ? (
+                <div className={styles.empty}>
+                    <Users size={48} className="text-gray-300 mb-2" />
+                    <p>No employees found</p>
                 </div>
-            </div>
-
-            {/* Employee List */}
-            <div className={styles.card}>
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-bold text-gray-800">Staff Directory</h3>
-                    <span className="text-sm font-medium text-gray-500">{filteredEmployees.length} MembersFound</span>
-                </div>
-
-                <div className={styles.employeeList}>
-                    {loading ? (
-                        <div className="text-center py-10 text-gray-500">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            Loading directory...
+            ) : (
+                <>
+                    {/* Summary Bar */}
+                    <div className={styles.summaryBar}>
+                        <span className={styles.summaryText}>{filteredEmployees.length} Employees</span>
+                        <div
+                            className={styles.activeFilter}
+                            style={{
+                                backgroundColor: `${getStatusColor(selectedStatus)}15`,
+                                color: getStatusColor(selectedStatus)
+                            }}
+                        >
+                            {selectedStatus}
                         </div>
-                    ) : filteredEmployees.length > 0 ? (
-                        filteredEmployees.map((emp) => (
-                            <div key={emp.id} className={styles.employeeTile}>
+                    </div>
+
+                    {/* Employee List */}
+                    <div className={styles.list}>
+                        {filteredEmployees.map(emp => (
+                            <div
+                                key={emp.id}
+                                className={styles.card}
+                                onClick={() => setSelectedEmployee(emp)}
+                            >
                                 <div className={styles.avatar}>
-                                    {emp.full_name?.charAt(0).toUpperCase() || 'U'}
+                                    {(emp.name || emp.full_name || 'E').charAt(0).toUpperCase()}
                                 </div>
-                                <div className={styles.empMainInfo}>
-                                    <div className={styles.empName}>{emp.full_name || 'Unknown'}</div>
-                                    <div className={styles.empMeta}>
-                                        {emp.role} • {emp.branch_name || 'No Branch'}
+                                <div className={styles.info}>
+                                    <h3 className={styles.name}>{emp.name || emp.full_name || 'Unknown'}</h3>
+                                    <div className={styles.subInfo}>
+                                        <p className={styles.email}>{emp.email || 'N/A'}</p>
+                                        <div className={styles.detailsRow}>
+                                            <span className={styles.badge}>{emp.district || 'Not assigned'}</span>
+                                            <span className={styles.date}>{formatDate(emp.created_at)}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={styles.empStats}>
-                                    <div className={styles.performance}>
-                                        <Star size={14} className="text-amber-500" fill="currentColor" />
-                                        <span>4.8</span>
+                                <div className={styles.trailing}>
+                                    <div
+                                        className={styles.statusPill}
+                                        style={{
+                                            backgroundColor: `${getStatusColor(emp.status)}15`,
+                                            color: getStatusColor(emp.status)
+                                        }}
+                                    >
+                                        <div
+                                            className={styles.statusDot}
+                                            style={{ backgroundColor: getStatusColor(emp.status) }}
+                                        />
+                                        <span>{emp.status || 'Active'}</span>
                                     </div>
-                                    <span className={`${styles.statusBadge} ${emp.status === 'Active' ? styles.statusActive : styles.statusInactive}`}>
-                                        {emp.status || 'Active'}
-                                    </span>
+                                    <span className={styles.phone}>{emp.phone || ''}</span>
                                 </div>
                             </div>
-                        ))
-                    ) : (
-                        <div className="text-center py-10 text-gray-400 italic">
-                            No employees match your search criteria.
+                        ))}
+                    </div>
+                </>
+            )}
+
+            {/* Employee Details Modal */}
+            {selectedEmployee && (
+                <div className={styles.modalOverlay} onClick={() => setSelectedEmployee(null)}>
+                    <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Employee Details</h2>
+                            <button className={styles.closeButton} onClick={() => setSelectedEmployee(null)}>
+                                <X size={24} />
+                            </button>
                         </div>
-                    )}
+
+                        <div className={styles.largeAvatar}>
+                            {(selectedEmployee.name || selectedEmployee.full_name || 'E').charAt(0).toUpperCase()}
+                        </div>
+
+                        <DetailRow label="Name" value={selectedEmployee.name || selectedEmployee.full_name || 'Unknown'} icon={User} />
+                        <DetailRow label="Email" value={selectedEmployee.email || 'N/A'} icon={Mail} />
+                        <DetailRow label="Phone" value={selectedEmployee.phone || 'N/A'} icon={Phone} />
+                        <DetailRow label="District" value={selectedEmployee.district || 'Not assigned'} icon={MapPin} />
+                        <DetailRow label="Role" value={selectedEmployee.role || 'Employee'} icon={Briefcase} />
+                        <DetailRow label="Status" value={selectedEmployee.status || 'Active'} icon={null} />
+                        <DetailRow label="Join Date" value={formatDate(selectedEmployee.created_at)} icon={Calendar} />
+
+                        <button className={styles.modalCloseBtn} onClick={() => setSelectedEmployee(null)}>
+                            Close
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
 
-export default EmployeesPage;
+const DetailRow = ({ label, value, icon: Icon }) => (
+    <div className={styles.detailRow}>
+        <div style={{ width: 120, display: 'flex', alignItems: 'center', gap: 8, color: '#4b5563' }}>
+            {Icon && <Icon size={16} />}
+            <span className={styles.detailLabel}>{label}:</span>
+        </div>
+        <span className={styles.detailValue}>{value}</span>
+    </div>
+);
+
+export default Employees;

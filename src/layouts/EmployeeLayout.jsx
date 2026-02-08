@@ -108,12 +108,11 @@ const EmployeeLayout = () => {
                     <NavItem to="/employee/inventory" icon={Package} label="Inventory" />
 
                     <div className={styles.navSectionTitle}>Orders</div>
-                    <NavItem to="/employee/orders/total" icon={ShoppingBag} label="All Orders" />
-                    <NavItem to="/employee/orders/pending" icon={Clock} label="Pending" />
-                    <NavItem to="/employee/orders/completed" icon={CheckCircle} label="Completed" />
+                    <NavItem to="/employee/orders" icon={ShoppingBag} label="All Orders" />
+                    <NavItem to="/employee/track-order" icon={Clock} label="Track Order" />
 
                     <div className={styles.navSectionTitle}>Workforce</div>
-                    <NavItem to="/employee/attendance/mark" icon={CalendarCheck} label="Attendance" />
+                    <NavItem to="/employee/attendance" icon={CalendarCheck} label="Attendance" />
                     <NavItem to="/employee/attendance/history" icon={History} label="History" />
 
                     <div className={styles.navSectionTitle}>Account</div>

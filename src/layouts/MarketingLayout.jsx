@@ -9,7 +9,9 @@ import {
     LogOut,
     Menu,
     X,
-    Bell
+    Bell,
+    RefreshCw,
+    Target
 } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import styles from '../styles/marketing/layout.module.css';
@@ -44,6 +46,7 @@ const MarketingLayout = () => {
     const navItems = [
         { path: '/marketing/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/marketing/team', icon: Users, label: 'Team Management' },
+        { path: '/marketing/targets', icon: Target, label: 'Targets' },
         { path: '/marketing/orders', icon: ShoppingCart, label: 'New Order' },
         { path: '/marketing/visits', icon: ClipboardList, label: 'Field Visit' },
         { path: '/marketing/profile', icon: UserCircle, label: 'My Profile' },
@@ -89,8 +92,9 @@ const MarketingLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <main className={styles.main}>
-                <header className={styles.header}>
+            {/* Main Content */}
+            <main className={`${styles.main} ${!isSidebarOpen ? styles.mainWithClosedSidebar : ''}`}>
+                <header className={`${styles.header} ${location.pathname === '/marketing/dashboard' ? styles.headerDashboard : ''}`}>
                     <div className={styles.headerLeft}>
                         <button
                             className={styles.toggleBtn}
@@ -102,19 +106,33 @@ const MarketingLayout = () => {
                     </div>
 
                     <div className={styles.headerRight}>
-                        <button className={styles.iconBtn}>
-                            <Bell size={20} />
-                            <span className={styles.badge}></span>
-                        </button>
-                        <div className={styles.userProfile}>
-                            <div className={styles.userInfo}>
-                                <span className={styles.userName}>{managerName}</span>
-                                <span className={styles.userRole}>Marketing Manager</span>
-                            </div>
-                            <div className={styles.avatar}>
-                                {managerName.substring(0, 2).toUpperCase()}
-                            </div>
-                        </div>
+                        {location.pathname === '/marketing/dashboard' ? (
+                            /* Dashboard Specific Action (Refresh -> Attendance) */
+                            <button
+                                className={styles.iconBtn}
+                                onClick={() => navigate('/marketing/attendance')}
+                                title="Attendance"
+                            >
+                                <RefreshCw size={20} /> {/* Assuming Refresh icon is intended, mapped to attendance as per flutter */}
+                            </button>
+                        ) : (
+                            /* Standard Header Actions */
+                            <>
+                                <button className={styles.iconBtn}>
+                                    <Bell size={20} />
+                                    <span className={styles.badge}></span>
+                                </button>
+                                <div className={styles.userProfile}>
+                                    <div className={styles.userInfo}>
+                                        <span className={styles.userName}>{managerName}</span>
+                                        <span className={styles.userRole}>Marketing Manager</span>
+                                    </div>
+                                    <div className={styles.avatar}>
+                                        {managerName.substring(0, 2).toUpperCase()}
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </header>
 

@@ -17,11 +17,18 @@ const LoginPage = () => {
     useEffect(() => {
         if (user && profile) {
             const role = profile.role || '';
-            if (role.toLowerCase().includes('employee')) navigate('/employee/dashboard');
-            else if (role.toLowerCase().includes('marketing')) navigate('/marketing/dashboard');
-            else if (role.toLowerCase().includes('production')) navigate('/production/dashboard');
-            else if (role.toLowerCase().includes('owner')) navigate('/owner/dashboard');
-            else navigate('/profile');
+
+            // Strict role checking to avoid fuzzy match errors (e.g. 'Marketing Executive' -> 'Marketing Manager' dashboard)
+            if (role === 'Marketing Manager') {
+                navigate('/marketing/dashboard');
+            } else if (role === 'Production Manager') {
+                navigate('/production/dashboard');
+            } else if (role === 'Enterprise Owner' || role === 'Owner') {
+                navigate('/owner/dashboard');
+            } else {
+                // Default: Employee Portal (covers 'Employee', 'Marketing Executive', 'Field Officer', etc.)
+                navigate('/employee/dashboard');
+            }
         }
     }, [user, profile, navigate]);
 

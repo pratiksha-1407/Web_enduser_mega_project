@@ -1,522 +1,542 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ownerService } from '../../services/ownerService';
-import StatCard from '../../components/owner/StatCard';
-import Modal from '../../components/common/Modal';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/owner/dashboard.module.css';
-import modalStyles from '../../components/common/Modal.module.css';
 import {
-    Users,
-    Package,
     IndianRupee,
     ShoppingCart,
-    AlertTriangle,
-    Bell,
-    Target,
-    UserPlus,
-    Plus,
-    ArrowUpRight,
-    TrendingUp,
+    Users,
+    ClipboardList,
+    ArrowUp,
+    ArrowDown,
+    Package,
+    AlertCircle,
     CheckCircle,
-    User,
+    Bell,
     CreditCard,
-    ShoppingBag,
+    UserPlus,
+    Truck,
     Clock,
-    Truck
+    Plus
 } from 'lucide-react';
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer
-} from 'recharts';
-import clsx from 'clsx';
+import fabStyles from '../../styles/components/fab.module.css';
 
-const OwnerDashboard = () => {
+const Dashboard = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null });
-    const [formState, setFormState] = useState({});
+    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
-    const fetchDashboardData = async () => {
+    const refreshDashboard = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
-            const res = await ownerService.getDashboardData();
-            setData(res);
-        } catch (error) {
-            console.error('Error fetching dashboard:', error);
+            const dashboardData = await ownerService.getDashboardData();
+            setData(dashboardData);
+            setError(null);
+        } catch (err) {
+            console.error("Dashboard load error", err);
+            setError("Failed to load dashboard data");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleQuickAction = (type) => {
-        setModalConfig({ isOpen: true, type });
-        setFormState({});
-    };
+    useEffect(() => {
+        refreshDashboard();
+    }, []);
 
-    const handleActionSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            if (modalConfig.type === 'announcement') {
-                await ownerService.sendAnnouncement(formState.message);
-                alert('Announcement sent successfully!');
-            } else if (modalConfig.type === 'target') {
-                await ownerService.assignTarget({
-                    branch: formState.branch,
-                    manager_id: formState.manager,
-                    target_amount: parseFloat(formState.revenue || 0),
-                    target_month: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`,
-                    remarks: formState.remarks
-                });
-                alert('Target assigned successfully!');
-            }
-            setModalConfig({ isOpen: false, type: null });
-            fetchDashboardData(); // Refresh activity
-        } catch (err) {
-            alert('Action failed: ' + err.message);
-        }
-    };
+    if (loading) return (
+        <div className={styles.loading}>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+            Loading Dashboard...
+        </div>
+    );
 
-    if (loading || !data) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-        );
-    }
+    if (error) return (
+        <div className={styles.loading}>
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+                onClick={refreshDashboard}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+                Retry
+            </button>
+        </div>
+    );
 
-    const getActivityIcon = (iconName) => {
-        const icons = {
-            ShoppingCart,
-            Package,
-            IndianRupee: IndianRupee,
-            CreditCard,
-            Bell,
-            Target,
-            UserPlus,
-            CheckCircle,
-            Clock,
-            Truck
-        };
-        return icons[iconName] || ShoppingBag;
-    };
+    if (!data) return null;
 
-    const getActivityColor = (color) => {
-        const colors = {
-            blue: '#3b82f6',
-            green: '#10b981',
-            orange: '#f59e0b',
-            purple: '#8b5cf6',
-            red: '#ef4444',
-            grey: '#6b7280'
-        };
-        return colors[color] || '#3b82f6';
-    };
-
-    // Date formatter
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const currentDate = new Date().toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+    });
 
     return (
-        <div className={styles.container}>
-            <header className={styles.dashboardHeader}>
-                <div className={styles.welcomeText}>
-                    <h2>Owner Portal</h2>
-                    <p>Business Overview & Growth Metrics</p>
-                </div>
-                <div className={styles.dateFilter}>
-                    <TrendingUp size={16} className="text-green-500" />
-                    <span className="text-sm font-semibold">{dateStr}</span>
-                </div>
-            </header>
-
-            {/* Profit Card - New from Flutter Parity */}
-            <div className={`${styles.profitCard} ${data.totalProfit < 0 ? styles.negative : ''}`}>
-                <div className={styles.profitHeader}>
-                    <div>
-                        <div className={styles.profitTitle}>Monthly Net Profit</div>
-                        <h2 className={styles.profitValue}>₹{data.totalProfit.toLocaleString()}</h2>
-                        <div className={styles.profitSub}>{data.profitMargin.toFixed(1)}% Margin</div>
-                    </div>
-                    <div className={styles.profitChart}>
-                        {/* Circular Progress Placeholder */}
-                        <div style={{ position: 'relative', width: 40, height: 40, borderRadius: '50%', background: `conic-gradient(white ${data.profitMargin}%, rgba(255,255,255,0.2) 0)` }}>
-                            <div style={{ position: 'absolute', top: 4, left: 4, right: 4, bottom: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}></div>
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.profitFooter}>
-                    <div className={styles.profitPill}>
-                        <IndianRupee size={16} />
-                        <span>Rev: ₹{(data.totalRevenue / 100000).toFixed(1)}L</span>
-                    </div>
-                    <div className={styles.profitPill}>
-                        <Package size={16} />
-                        <span>Cost: ₹{(data.totalRawMaterialCost / 100000).toFixed(1)}L</span>
-                    </div>
+        <div className={styles.dashboardContainer}>
+            {/* Date Header */}
+            <div className={styles.dateRow}>
+                <div className={styles.dateText}>
+                    {currentDate}
+                    <span className={styles.dateSubText}>Business Overview</span>
                 </div>
             </div>
+
+            {/* Profit Card */}
+            <ProfitCard data={data} />
 
             {/* Metrics Grid */}
-            <div className={styles.grid}>
-                <StatCard
+            <div className={styles.metricsGrid}>
+                <MetricCard
                     title="Total Revenue"
-                    value={`₹${data.totalRevenue.toLocaleString()}`}
+                    value={`₹${data.totalRevenue?.toLocaleString()}`}
+                    subtitle="This Month"
                     icon={IndianRupee}
-                    color="green"
+                    color="#16a34a"
                     growth={data.revenueGrowth}
-                    subtitle="Monthly performance"
+                    onClick={() => navigate('/owner/revenue')}
                 />
-                <StatCard
+                <MetricCard
                     title="Total Orders"
-                    value={data.totalOrders}
+                    value={data.totalOrders?.toString()}
+                    subtitle="All orders"
                     icon={ShoppingCart}
-                    color="blue"
+                    color="#2563eb"
                     growth={data.orderGrowth}
-                    subtitle="Platform wide"
+                    onClick={() => navigate('/owner/orders')}
                 />
-                <StatCard
+                <MetricCard
                     title="Active Employees"
-                    value={data.activeEmployees}
+                    value={data.activeEmployees?.toString()}
+                    subtitle="Current staff"
                     icon={Users}
-                    color="purple"
+                    color="#9333ea"
                     growth={data.employeeGrowth}
-                    subtitle="Current Staff"
+                    onClick={() => navigate('/owner/employees')}
                 />
-                <StatCard
+                <MetricCard
                     title="Pending Orders"
-                    value={data.pendingOrders}
-                    icon={AlertTriangle}
-                    color="orange"
-                    isWarning={data.pendingOrders > 0}
+                    value={data.pendingOrders?.toString()}
                     subtitle="Needs attention"
+                    icon={ClipboardList}
+                    color="#f97316"
+                    isWarning={true}
+                    onClick={() => navigate('/owner/pending-orders')}
                 />
             </div>
 
-            {/* Charts & Actions Section */}
-            <div className={styles.chartSection}>
-                {/* Revenue Chart */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <h3 className={styles.cardTitle}>Revenue Overview</h3>
-                        <span className={styles.viewAll}>Last 7 Days</span>
-                    </div>
-                    <div style={{ height: 300, width: '100%', position: 'relative', minHeight: 300, minWidth: 0 }}>
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
-                            <BarChart data={data.revenueChartData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                                <XAxis
-                                    dataKey="day"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: '#6b7280', fontSize: 12 }}
-                                    dy={10}
-                                />
-                                <YAxis
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: '#6b7280', fontSize: 12 }}
-                                    tickFormatter={(value) => `₹${value / 1000}k`}
-                                />
-                                <Tooltip
-                                    cursor={{ fill: '#f3f4f6' }}
-                                    contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                                    formatter={(value) => [`₹${value.toLocaleString()}`, 'Revenue']}
-                                />
-                                <Bar
-                                    dataKey="revenue"
-                                    fill="#3b82f6"
-                                    radius={[4, 4, 0, 0]}
-                                    barSize={40}
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+            {/* Revenue Chart Section */}
+            <RevenueChart data={data.revenueChartData} totalRevenue={data.totalRevenue} growth={data.revenueGrowth} />
 
-                {/* Right Column: Actions & Products */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                    {/* Production Card - New from Flutter Parity */}
-                    <div className={styles.productionCard}>
-                        <div className={styles.cardHeader}>
-                            <h3 className={styles.cardTitle}>Production Status</h3>
-                        </div>
-                        <div className={styles.productionItem}>
-                            <div className={styles.prodHeader}>
-                                <span>Production</span>
-                                <span>{data.productionToday} / {data.productionTarget} T</span>
-                            </div>
-                            <div className={styles.prodBarBg}>
-                                <div
-                                    className={styles.prodBarFill}
-                                    style={{
-                                        width: `${Math.min((data.productionToday / data.productionTarget) * 100, 100)}%`,
-                                        backgroundColor: '#3B82F6'
-                                    }}
-                                ></div>
-                            </div>
-                            <div className={styles.prodFooter}>
-                                <span>Today's Output</span>
-                                <span>{((data.productionToday / data.productionTarget) * 100).toFixed(0)}%</span>
-                            </div>
-                        </div>
-                        <div className={styles.productionItem}>
-                            <div className={styles.prodHeader}>
-                                <span>Dispatch</span>
-                                <span>{data.dispatchedToday} / {data.ordersToDispatch} Orders</span>
-                            </div>
-                            <div className={styles.prodBarBg}>
-                                <div
-                                    className={styles.prodBarFill}
-                                    style={{
-                                        width: `${Math.min((data.dispatchedToday / data.ordersToDispatch) * 100, 100)}%`,
-                                        backgroundColor: '#10B981'
-                                    }}
-                                ></div>
-                            </div>
-                            <div className={styles.prodFooter}>
-                                <span>Order Fulfillment</span>
-                                <span>{((data.dispatchedToday / data.ordersToDispatch) * 100).toFixed(0)}%</span>
-                            </div>
-                        </div>
-                    </div>
+            {/* Production Card */}
+            <ProductionCard data={data} />
 
-                    {/* Quick Actions */}
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <h3 className={styles.cardTitle}>Quick Actions</h3>
-                        </div>
-                        <div className={styles.quickActionsGrid}>
-                            <button
-                                onClick={() => handleQuickAction('announcement')}
-                                className={clsx(styles.actionButton, styles.bgBlue)}
-                            >
-                                <Bell size={20} />
-                                <span>Announcement</span>
-                            </button>
-                            <button
-                                onClick={() => handleQuickAction('target')}
-                                className={clsx(styles.actionButton, styles.bgPurple)}
-                            >
-                                <Target size={20} />
-                                <span>Assign Target</span>
-                            </button>
-                            <button className={clsx(styles.actionButton, styles.bgGreen)}>
-                                <UserPlus size={20} />
-                                <span>Add Staff</span>
-                            </button>
-                            <button className={clsx(styles.actionButton, styles.bgOrange)}>
-                                <Package size={20} />
-                                <span>Update Stock</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            {/* Material Cost Breakdown */}
+            <MaterialCostCard data={data} />
+
+            {/* Top Products */}
+            <TopProductsCard data={data} />
+
+            {/* Recent Activity */}
+            <h3 className={styles.sectionHeader}>Recent Activity</h3>
+            <div className={styles.activityList}>
+                {data.recentActivities?.map((activity, index) => (
+                    <ActivityItem key={index} activity={activity} />
+                ))}
             </div>
 
-            {/* Material Cost Breakdown - New from Flutter Parity */}
-            {data.materialCostBreakdown && (
-                <div className={styles.costCard}>
-                    <div className={styles.cardHeader}>
-                        <h3 className={styles.cardTitle}>Material Cost Breakdown</h3>
-                    </div>
-                    {Object.entries(data.materialCostBreakdown).map(([name, cost], index) => {
-                        const colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'];
-                        const color = colors[index % colors.length];
-                        return (
-                            <div key={name} className={styles.costItem}>
-                                <div className={styles.costLabel}>
-                                    <div className={styles.costColor} style={{ backgroundColor: color }}></div>
-                                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>{name}</span>
-                                </div>
-                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
-                                    ₹{cost.toLocaleString()}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-
-            <div className={styles.chartSection} style={{ gridTemplateColumns: '1fr 1fr' }}>
-                {/* Top Products */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <div>
-                            <h3 className={styles.cardTitle}>Top Selling Products</h3>
-                            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>By revenue</p>
-                        </div>
-                    </div>
-                    {data.topProducts.length === 0 ? (
-                        <div className={styles.emptyState}>
-                            <Package size={40} className={styles.emptyIcon} />
-                            <p className={styles.emptyText}>No product data</p>
-                        </div>
-                    ) : (
-                        <div className={styles.productList}>
-                            {data.topProducts.map((product, index) => {
-                                const rankClass = index === 0 ? styles.rank1 : index === 1 ? styles.rank2 : styles.rank3;
-                                return (
-                                    <div key={index} className={styles.productItem}>
-                                        <div className={clsx(styles.rankBadge, rankClass)}>
-                                            {index + 1}
-                                        </div>
-                                        <div className={styles.productInfo}>
-                                            <h4 className={styles.productName}>{product.name}</h4>
-                                            <div className={styles.productMeta}>
-                                                <div className={styles.salesTag}>
-                                                    {product.sales} sales
-                                                </div>
-                                                <span className={styles.revenueText}>
-                                                    ₹{product.revenue.toLocaleString()}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className={styles.productRevenuePill}>
-                                            ₹{(product.revenue / 1000).toFixed(0)}k
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-
-                {/* Recent Activity */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <div>
-                            <h3 className={styles.cardTitle}>Recent Activities</h3>
-                            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>Latest updates</p>
-                        </div>
-                    </div>
-                    {data.recentActivities.length === 0 ? (
-                        <div className={styles.emptyState}>
-                            <Bell size={40} className={styles.emptyIcon} />
-                            <p className={styles.emptyText}>No recent activities</p>
-                        </div>
-                    ) : (
-                        <div className={styles.activityList}>
-                            {data.recentActivities.map((activity, index) => {
-                                const Icon = getActivityIcon(activity.icon);
-                                const color = getActivityColor(activity.color);
-                                return (
-                                    <div key={index} className={styles.activityItem}>
-                                        <div className={styles.activityIcon} style={{
-                                            backgroundColor: `${color}1A`, // 10% opacity
-                                            border: `1px solid ${color}33`, // 20% opacity
-                                        }}>
-                                            <Icon size={20} color={color} />
-                                        </div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                                <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>{activity.title}</span>
-                                                <span className={styles.activityTime}>{activity.time}</span>
-                                            </div>
-                                            {activity.description && (
-                                                <p style={{ fontSize: '12px', color: '#4b5563', margin: 0, lineHeight: '1.4' }}>
-                                                    {activity.description}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            </div>
-            {/* Action Modals */}
-            <Modal
-                isOpen={modalConfig.isOpen}
-                onClose={() => setModalConfig({ isOpen: false, type: null })}
-                title={modalConfig.type === 'announcement' ? 'Send Announcement' : 'Assign New Target'}
+            {/* FAB */}
+            <button
+                className={fabStyles.fab}
+                onClick={() => navigate('/owner/assign-target')}
+                title="Assign Target"
             >
-                <form onSubmit={handleActionSubmit} className="p-4">
-                    {modalConfig.type === 'announcement' ? (
-                        <div className={modalStyles.formGroup}>
-                            <label className={modalStyles.label}>Broadcast Message</label>
-                            <textarea
-                                className={modalStyles.textarea}
-                                placeholder="Message to all employees..."
-                                required
-                                value={formState.message || ''}
-                                onChange={e => setFormState({ ...formState, message: e.target.value })}
-                                style={{ minHeight: '120px' }}
-                            />
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <div className={modalStyles.formGroup}>
-                                <label className={modalStyles.label}>Branch Name</label>
-                                <input
-                                    className={modalStyles.input}
-                                    placeholder="e.g. Pune Branch"
-                                    required
-                                    value={formState.branch || ''}
-                                    onChange={e => setFormState({ ...formState, branch: e.target.value })}
-                                />
-                            </div>
-                            <div className={modalStyles.formGroup}>
-                                <label className={modalStyles.label}>Manager</label>
-                                <input
-                                    className={modalStyles.input}
-                                    placeholder="Select Manager"
-                                    required
-                                    value={formState.manager || ''}
-                                    onChange={e => setFormState({ ...formState, manager: e.target.value })}
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                                <div className={modalStyles.formGroup}>
-                                    <label className={modalStyles.label}>Revenue Target (₹)</label>
-                                    <input
-                                        type="number"
-                                        className={modalStyles.input}
-                                        placeholder="Amount"
-                                        required
-                                        value={formState.revenue || ''}
-                                        onChange={e => setFormState({ ...formState, revenue: e.target.value })}
-                                    />
-                                </div>
-                                <div className={modalStyles.formGroup}>
-                                    <label className={modalStyles.label}>Month</label>
-                                    <input
-                                        type="text"
-                                        className={modalStyles.input}
-                                        defaultValue={new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
-                                        disabled
-                                    />
-                                </div>
-                            </div>
-                            <div className={modalStyles.formGroup}>
-                                <label className={modalStyles.label}>Remarks</label>
-                                <input
-                                    className={modalStyles.input}
-                                    placeholder="Any notes..."
-                                    value={formState.remarks || ''}
-                                    onChange={e => setFormState({ ...formState, remarks: e.target.value })}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    <div className={modalStyles.footer} style={{ marginTop: '24px', display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                        <button type="button" className={modalStyles.secondaryBtn} onClick={() => setModalConfig({ isOpen: false, type: null })}>Cancel</button>
-                        <button type="submit" className={modalStyles.primaryBtn}>
-                            {modalConfig.type === 'announcement' ? 'Broadcast' : 'Assign Target'}
-                        </button>
-                    </div>
-                </form>
-            </Modal>
+                <Plus size={24} />
+            </button>
         </div>
     );
 };
 
-export default OwnerDashboard;
+// Sub-components
+const ProfitCard = ({ data }) => {
+    const isProfit = data.totalProfit >= 0;
+    const gradient = isProfit
+        ? 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)'
+        : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)';
+
+    return (
+        <div className={styles.profitCard} style={{ background: gradient }}>
+            <div className={styles.profitHeader}>
+                <div>
+                    <div className={styles.profitTitle}>Monthly Net Profit</div>
+                    <div className={styles.profitAmount}>₹{data.totalProfit?.toLocaleString()}</div>
+                    <div className={styles.profitMargin}>{data.profitMargin?.toFixed(1)}% Margin</div>
+                </div>
+                <div className={styles.profitProgress}>
+                    <div className={styles.marginValue}>{data.profitMargin?.toFixed(0)}%</div>
+                    {/* Simplified Circular Progress Visual */}
+                    <div style={{
+                        position: 'absolute',
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        border: '4px solid rgba(255,255,255,0.3)',
+                        borderTopColor: 'white',
+                        transform: 'rotate(45deg)'
+                    }} />
+                </div>
+            </div>
+            <div className={styles.profitStatsRow}>
+                <div className={styles.profitStatPill}>
+                    <IndianRupee size={14} />
+                    Revenue: ₹{data.totalRevenue?.toLocaleString()}
+                </div>
+                <div className={styles.profitStatPill}>
+                    <Package size={14} />
+                    Cost: ₹{data.totalRawMaterialCost?.toLocaleString()}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const MetricCard = ({ title, value, subtitle, icon: Icon, color, growth, isWarning, onClick }) => (
+    <div className={styles.metricCard} onClick={onClick}>
+        <div className={styles.metricHeader}>
+            <div className={styles.iconBox} style={{ backgroundColor: `${color}15` }}>
+                <Icon size={22} color={color} />
+            </div>
+            {(growth !== undefined || isWarning) && (
+                <div
+                    className={styles.growthBadge}
+                    style={{
+                        backgroundColor: isWarning ? '#fff7ed' : (growth >= 0 ? '#f0fdf4' : '#fef2f2'),
+                        color: isWarning ? '#c2410c' : (growth >= 0 ? '#15803d' : '#b91c1c')
+                    }}
+                >
+                    {isWarning ? <AlertCircle size={12} /> : (growth >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
+                    {isWarning ? '!' : `${Math.abs(growth)}%`}
+                </div>
+            )}
+        </div>
+        <div>
+            <div className={styles.metricValue}>{value}</div>
+            <div className={styles.metricTitle}>{title}</div>
+            <div className={styles.metricSubtitle}>{subtitle}</div>
+        </div>
+    </div>
+);
+
+const RevenueChart = ({ data, totalRevenue, growth }) => {
+    // Calculate scaling
+    let maxRevenue = Math.max(...(data?.map(d => d.revenue) || [0]));
+    if (maxRevenue === 0) maxRevenue = 100000; // Default fallback
+
+    const formatYAxis = (val) => {
+        if (val >= 1000000) return `₹${(val / 1000000).toFixed(1)}M`;
+        if (val >= 1000) return `₹${(val / 1000).toFixed(0)}k`;
+        return `₹${val}`;
+    };
+
+    return (
+        <div className={styles.chartCard}>
+            <div className={styles.chartHeader}>
+                <h3 className={styles.chartTitle}>Revenue Overview</h3>
+            </div>
+            <div className={styles.chartSubtitle}>Last 7 days</div>
+
+            <div className={styles.chartContainer}>
+                {/* Y-axis */}
+                <div className={styles.yAxis}>
+                    <div>{formatYAxis(maxRevenue)}</div>
+                    <div>{formatYAxis(maxRevenue * 0.75)}</div>
+                    <div>{formatYAxis(maxRevenue * 0.5)}</div>
+                    <div>{formatYAxis(maxRevenue * 0.25)}</div>
+                    <div style={{ marginBottom: 20 }}>₹0</div>
+                </div>
+
+                {/* Bars */}
+                <div className={styles.barContainer}>
+                    {data?.map((item, idx) => {
+                        const heightPercent = maxRevenue > 0 ? (item.revenue / maxRevenue) * 100 : 0;
+                        const isActive = item.revenue > 0;
+                        return (
+                            <div key={idx} className={styles.barGroup}>
+                                <div
+                                    className={styles.bar}
+                                    style={{
+                                        height: `${heightPercent}%`,
+                                        backgroundColor: isActive ? '#2563eb' : 'rgba(156, 163, 175, 0.2)'
+                                    }}
+                                    title={`₹${item.revenue?.toLocaleString()}`}
+                                >
+                                    {isActive && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: -20,
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            fontSize: 10,
+                                            fontWeight: 600,
+                                            color: '#4b5563',
+                                            whiteSpace: 'nowrap'
+                                        }}>
+                                            {formatYAxis(item.revenue)}
+                                        </div>
+                                    )}
+                                </div>
+                                <span className={styles.barLabel}>{item.day}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className={styles.chartFooter}>
+                <div className={styles.footerLabel}>
+                    <span className={styles.footerTitle}>Monthly Revenue</span>
+                    <span className={styles.footerValue}>₹{totalRevenue?.toLocaleString()}</span>
+                </div>
+                <div
+                    className={styles.growthBadge}
+                    style={{
+                        backgroundColor: growth >= 0 ? '#f0fdf4' : '#fef2f2',
+                        color: growth >= 0 ? '#15803d' : '#b91c1c'
+                    }}
+                >
+                    {growth >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                    {Math.abs(growth)}%
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ProductionCard = ({ data }) => {
+    const progress = data.productionTarget > 0 ? (data.productionToday / data.productionTarget) * 100 : 0;
+    const isAchieved = data.productionToday >= data.productionTarget;
+
+    return (
+        <div className={styles.chartCard}> {/* reusing card style */}
+            <div className={styles.chartHeader}>
+                <h3 className={styles.chartTitle}>Today's Production</h3>
+                <span
+                    className={styles.growthBadge}
+                    style={{
+                        backgroundColor: isAchieved ? '#f0fdf4' : '#fff7ed',
+                        color: isAchieved ? '#15803d' : '#c2410c'
+                    }}
+                >
+                    {isAchieved ? 'Target Achieved' : 'In Progress'}
+                </span>
+            </div>
+
+            <div className={styles.productionSection}>
+                <div className={styles.progressContainer}>
+                    <div className={styles.progressInfo}>
+                        <h4 style={{ fontSize: 13, color: '#4b5563', marginBottom: 8 }}>Progress</h4>
+                        <div style={{ fontSize: 24, fontWeight: 700, color: '#1f2937' }}>
+                            {data.productionToday.toFixed(0)} / {data.productionTarget.toFixed(0)}
+                        </div>
+                        <div style={{ fontSize: 14, color: '#6b7280' }}>Bags Produced</div>
+                    </div>
+
+                    {/* Ring Chart */}
+                    <div className={styles.progressCircle}>
+                        <svg viewBox="0 0 36 36" style={{ width: 100, height: 100, transform: 'rotate(-90deg)' }}>
+                            <path
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="#e5e7eb"
+                                strokeWidth="4"
+                            />
+                            <path
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke={isAchieved ? "#16a34a" : "#2563eb"}
+                                strokeWidth="4"
+                                strokeDasharray={`${progress}, 100`}
+                            />
+                        </svg>
+                        <div style={{ position: 'absolute', textAlign: 'center' }}>
+                            <div className={styles.progressText}>{progress.toFixed(0)}%</div>
+                            <div className={styles.progressSub}>Complete</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ marginTop: 16, height: 8, background: '#e5e7eb', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{
+                        width: `${Math.min(progress, 100)}%`,
+                        height: '100%',
+                        background: isAchieved ? '#16a34a' : '#2563eb'
+                    }} />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const MaterialCostCard = ({ data }) => {
+    // Sort materials by cost descending
+    const sortedMaterials = Object.entries(data.materialCostBreakdown || {})
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 5);
+
+    const totalCost = data.totalRawMaterialCost || 1; // avoid div by zero
+
+    return (
+        <div className={styles.chartCard}>
+            <div className={styles.chartHeader}>
+                <h3 className={styles.chartTitle}>Material Cost Breakdown</h3>
+            </div>
+            <div className={styles.chartSubtitle}>This month</div>
+
+            <div style={{ marginTop: 16 }}>
+                {/* Total Cost Box */}
+                <div className={styles.materialCostTotal}>
+                    <div className={styles.materialTotalLabelGroup}>
+                        <div className={styles.materialIconBox}>
+                            <Package size={20} />
+                        </div>
+                        <span className={styles.materialTotalLabel}>Total Material Cost</span>
+                    </div>
+                    <span className={styles.materialTotalValue}>₹{totalCost.toLocaleString()}</span>
+                </div>
+
+                {/* Material List */}
+                {sortedMaterials.map(([name, cost], index) => {
+                    const percentage = (cost / totalCost) * 100;
+                    return (
+                        <div key={index} className={styles.materialItem}>
+                            <div className={styles.materialItemRow}>
+                                <span className={styles.materialName}>{name}</span>
+                                <span className={styles.materialCost}>₹{cost.toLocaleString()}</span>
+                            </div>
+                            <div className={styles.materialProgressRow}>
+                                <div className={styles.materialProgressBar}>
+                                    <div
+                                        className={styles.materialProgressFill}
+                                        style={{ width: `${percentage}%` }}
+                                    />
+                                </div>
+                                <span className={styles.materialPercentage}>{percentage.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const TopProductsCard = ({ data }) => {
+    const products = data.topProducts || [];
+    const colors = ['#f59e0b', '#4b5563', '#ea580c']; // Gold, Grey, Orange
+
+    // Helper to compact number
+    const compactNumber = (num) => {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+        return num;
+    };
+
+    return (
+        <div className={styles.chartCard} style={{ marginBottom: 20 }}>
+            <div className={styles.chartHeader}>
+                <h3 className={styles.chartTitle}>Top Selling Products</h3>
+            </div>
+            <div className={styles.chartSubtitle}>By revenue</div>
+
+            <div style={{ marginTop: 16 }}>
+                {products.length === 0 ? (
+                    <div className="text-gray-500 text-center py-4">No product data</div>
+                ) : (
+                    products.map((product, index) => {
+                        const rankColor = colors[index] || '#6b7280';
+                        return (
+                            <div key={index} className={styles.productItem}>
+                                <div
+                                    className={styles.rankBadge}
+                                    style={{
+                                        backgroundColor: `${rankColor}15`,
+                                        color: rankColor,
+                                        borderColor: `${rankColor}40`,
+                                        borderWidth: 1,
+                                        borderStyle: 'solid'
+                                    }}
+                                >
+                                    {index + 1}
+                                </div>
+                                <div className={styles.productInfo}>
+                                    <div className={styles.productName}>{product.name}</div>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <span className={styles.salesPill}>
+                                            {product.sales} sales
+                                        </span>
+                                        <span className={styles.revenueText}>
+                                            ₹{product.revenue.toLocaleString()}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className={styles.revenuePill}>
+                                    ₹{compactNumber(product.revenue)}
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
+        </div>
+    );
+};
+
+const ActivityItem = ({ activity }) => {
+    // Map icon string to component if needed, or use defaults
+    const getIcon = (iconName) => {
+        switch (iconName) {
+            case 'ShoppingCart': return ShoppingCart;
+            case 'CreditCard': return CreditCard;
+            case 'Package': return Package;
+            case 'UserPlus': return UserPlus;
+            case 'CheckCircle': return CheckCircle;
+            case 'Truck': return Truck;
+            default: return Bell;
+        }
+    };
+
+    const Icon = getIcon(activity.icon);
+
+    // Map color name to hex
+    const getColor = (colorName) => {
+        switch (colorName) {
+            case 'green': return '#16a34a';
+            case 'blue': return '#2563eb';
+            case 'orange': return '#f97316';
+            case 'purple': return '#9333ea';
+            default: return '#6b7280';
+        }
+    };
+
+    const color = getColor(activity.color);
+
+    return (
+        <div className={styles.activityCard}>
+            <div className={styles.activityIcon} style={{ backgroundColor: `${color}15` }}>
+                <Icon size={20} color={color} />
+            </div>
+            <div className={styles.activityContent}>
+                <div className={styles.activityTitle}>{activity.title}</div>
+                <div className={styles.activityDesc}>{activity.description}</div>
+                <div className={styles.activityTime}>
+                    <Clock size={10} style={{ marginRight: 4, display: 'inline' }} />
+                    {activity.time}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dashboard;

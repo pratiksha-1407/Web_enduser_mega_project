@@ -60,12 +60,64 @@ export const AuthProvider = ({ children }) => {
                 }
             }
 
+            // 3. Device Binding Logic (Security) - wrapped in try/catch for robust schema compatibility
+            if (data) {
+                const currentDeviceId = getOrCreateDeviceId();
+
+                try {
+                    // Start of device logic
+                    if (!data.device_id) {
+                        // Case A: First time login - Bind this device to the user
+                        console.log('🔒 Binding new device to user:', currentDeviceId);
+                        const { error: bindError } = await supabase
+                            .from('emp_profile')
+                            .update({ device_id: currentDeviceId })
+                            .eq('id', data.id);
+
+                        if (bindError) {
+                            // If column missing, just log/ignore to prevent crash or loops
+                            if (bindError.message?.includes('column')) {
+                                console.warn('Device Binding skipped: Column device_id missing in DB.');
+                            } else {
+                                console.error('Device binding failed:', bindError);
+                            }
+                        } else {
+                            data.device_id = currentDeviceId;
+                        }
+                    } else if (data.device_id !== currentDeviceId) {
+                        // Case B: Mismatch - Block Access IF and ONLY IF the DB has a value
+                        console.error('⛔ Device Mismatch! Registered:', data.device_id, 'Current:', currentDeviceId);
+                        alert('Security Alert: Access Denied.\n\nYou are attempting to login from an unauthorized device. This account is bound to another device.\n\nPlease contact your administrator to reset your device binding.');
+                        await supabase.auth.signOut();
+                        setUser(null);
+                        setProfile(null);
+                        return; // Stop loading profile
+                    }
+                } catch (err) {
+                    console.warn('Device binding logic omitted due to error:', err);
+                }
+            }
+
             setProfile(data);
         } catch (error) {
             console.error('Error fetching profile:', error);
         } finally {
             setLoading(false);
         }
+    };
+
+    // Helper to persist a unique device ID in the browser
+    const getOrCreateDeviceId = () => {
+        let deviceId = localStorage.getItem('mega_device_id');
+        if (!deviceId) {
+            // Simple UUID generator
+            deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            localStorage.setItem('mega_device_id', deviceId);
+        }
+        return deviceId;
     };
 
     const login = async (email, password) => {

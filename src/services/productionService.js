@@ -83,7 +83,7 @@ export const productionService = {
         const { data: orders, error: orderError } = await supabase
             .from('emp_mar_orders')
             .select('total_price')
-            .eq('status', 'completed')
+            .in('status', ['completed', 'delivered', 'dispatched', 'Completed', 'Delivered', 'Dispatched'])
             .gte('created_at', startOfMonth.split('T')[0]) // Simplified date filter
             .lte('created_at', today);
 
@@ -131,9 +131,20 @@ export const productionService = {
         const { data, error } = await supabase
             .from('emp_mar_orders')
             .select('*')
-            .eq('status', 'completed')
+            .in('status', ['completed', 'delivered', 'dispatched', 'Completed', 'Delivered', 'Dispatched'])
             .order('created_at', { ascending: false })
             .limit(5);
+
+        if (error) throw error;
+        return data;
+    },
+
+    async getAllOrders() {
+        const { data, error } = await supabase
+            .from('emp_mar_orders')
+            .select('*')
+            .in('status', ['completed', 'delivered', 'dispatched', 'Completed', 'Delivered', 'Dispatched'])
+            .order('created_at', { ascending: false });
 
         if (error) throw error;
         return data;
